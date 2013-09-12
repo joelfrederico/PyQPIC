@@ -1,0 +1,13 @@
+=============================
+QPDG: QuickPIC Deck Generator
+=============================
+
+To use:
+1) Edit 'deckinput.py' to your liking.
+2) Run 'deckgen.py':
+
+python deckgen.py
+
+...this generates the file 'rpinput'.
+3) Copy 'rpinput' to your working dir.
+4) Run QuickPIC with 'rpinput'.
