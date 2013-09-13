@@ -279,10 +279,10 @@ deckstr+=(\
  Mass = 1.0 \n\
  VT2X=0.0, VT2Y=0.0 \n\
  Non_Neutral_Factor = 1.0  \n\
- Profile_type=0 \n\
- argx1=0. \n\
- argx2=0. \n\
- argx3=0. \n\
+ Profile_type = "+str(plas_prof)+" \n\
+ argx1 = "+str(plas_p1)+" \n\
+ argx2 = "+str(plas_p2)+" \n\
+ argx3 = "+str(plas_p3)+" \n\
  nsrand = 0  \n\
  Prof_Nsec = 9  \n\
  Prof_Parameter(1,1:9) = 0.1,0.1,1,1,0.05,0.05,1,1,0 \n\

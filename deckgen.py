@@ -208,6 +208,39 @@ Z_PLAS  = int(plasma_z)
 MAX_ION = int(max_ion_lv)
 
 #-------------------
+# Plasma Geometry
+#-------------------
+# initialize plasma parameters
+plas_p1 = 1
+plas_p2 = 1
+plas_p3 = 1
+# set profile code
+# --------
+#  0: flat
+#  3: gaussian ramp
+# 19: circle
+# --------
+# flat density profile:
+if   (plasma_geom=='flat'):
+    plas_prof = int(0)
+# gaussian ramp:
+# np(z) = np0(1+p1*exp(-((z-p2)/p3)^2))
+# p1: height of peak w.r.t. np0
+# p2: offset of peak
+# p3: 2*sig^2
+elif (plasma_geom=='gauss'):
+    plas_prof = int(3)
+    plas_p1   = -1*ramp_dir
+    plas_p2   = ((1-ramp_dir)/2)*Lp
+    plas_p3   = 2*pow(ramp_width,2)
+# circular filament:
+# np(z) = np0*p2(r>p1) or 0(r<p1)
+elif (plasma_geom=='circle'):
+    plas_prof = int(19)
+    plas_p1 = plas_radius
+    plas_p2 = 1.0
+
+#-------------------
 # Simulation Output Parameters
 #-------------------
 # 3-D Sampling

@@ -142,9 +142,9 @@ off_z.append( 125.       ) # um
 #-------------------
 # Plasma Parameters
 #-------------------
-# plasma density
+# (initial) plasma density
 np         = 5.0E16    # cm^-3
-# plasma length
+# plasma length (=sim length)
 Lp         = 5.0       # cm
 # min plasma macro-particle density
 NP2_min    = 4         # per cell
@@ -153,16 +153,42 @@ preformed  = True      # boolean
 # plasma spiecies atomic number
 # Note: only used if plasma is
 # not pre-formed
-# ------
+# --------
 # H : 1
 # Li: 3
 # He: 2
 # Ar: 18
 # Cs: 55
-# ------
+# --------
 plasma_z   = 3
 # maximum ionization level
 max_ion_lv = 1
+# --------
+# plasma geometry
+# --------
+#  'flat'  : constant density
+#  'gauss' : gaussian ramp
+#  'circle': circular filament
+# --------
+plasma_geom = 'flat'
+# --------
+# params for gaussian ramp
+# (ignored if not ramp)
+# --------
+# NOTE: ramp min occurs at
+# very beginning or end of
+# simulated plasma length
+# ramp_dir=+1: up-ramp
+# ramp_dir=-1: down-ramp
+ramp_dir     = +1    # unitless
+# ramp_width : gauss sigma
+ramp_width   = 10.0  # cm
+# --------
+# params for circular filament
+# (ignored if not circle)
+# --------
+# radius of filament
+plas_radius  = 10.0  # um
 
 #-------------------
 # Simulation Output Parameters
