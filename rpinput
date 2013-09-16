@@ -17,7 +17,7 @@ Total grids = (2^INDX) * (2^INDY) * (2^INDZ)
 Total beam particles = NPX * NPY * NPZ 
 ------------------------------------------------------ 
 &Simulation_Sys 
- Box_X= 381, Box_Y= 381, Box_Z= 375, 
+ Box_X= 181, Box_Y= 181, Box_Z= 301, 
  INDX = 8, INDY = 8, INDZ = 9  
 / 
  
@@ -108,7 +108,7 @@ Destroyer_Criteria(3,:) = upper bound
 &Beam 
  BEAM_EVOLUTION = .true. 
  MIN_BEAM_PARTICLE = 5000000  
- NPX = 128, NPY = 128, NPZ = 512 
+ NPX = 128, NPY = 128, NPZ = 256 
  Charge = -1.0 
  Mass = 1.0 
  Gamma = 40000.0 
@@ -117,8 +117,8 @@ Destroyer_Criteria(3,:) = upper bound
  Init_Routine =1 
  BEAM_PROFILE = 'test.hdf'  
  QUIET_START = .true.  
- Parameter_Array(1:1,1:3) = 190.5,190.5,150.0 
- Parameter_Array(2:2,1:3) = 4.10129563089,1.8341551653,20.0 
+ Parameter_Array(1:1,1:3) = 90.5,90.5,90.3 
+ Parameter_Array(2:2,1:3) = 2.83176954196,1.26640583849,20.0 
  Parameter_Array(3:3,1:3) = 100.0,20.0,0.0 
  Parameter_Array(4:4,1:3) = 0.,0.,0. 
  Parameter_Array(5:5,1:3) = 0.,0.,0. 
@@ -130,15 +130,15 @@ Destroyer_Criteria(3,:) = upper bound
  Use_Destroyer = .true. 
  Destroyer_NCriteria = 5  
  Destroyer_Criteria(1:1,1:5)=1,1,2,2,6 
- Destroyer_Criteria(2:2,1:5)=0,379,0,379,0 
- Destroyer_Criteria(3:3,1:5)=2,381,2,381,100 
+ Destroyer_Criteria(2:2,1:5)=0,179,0,179,0 
+ Destroyer_Criteria(3:3,1:5)=2,181,2,181,100 
  Use_Radiation_Damping = .false. 
 / 
  
 &Beam 
  BEAM_EVOLUTION = .true. 
  MIN_BEAM_PARTICLE = 5000000  
- NPX = 128, NPY = 128, NPZ = 512 
+ NPX = 128, NPY = 128, NPZ = 256 
  Charge = -1.0 
  Mass = 1.0 
  Gamma = 40000.0 
@@ -147,8 +147,8 @@ Destroyer_Criteria(3,:) = upper bound
  Init_Routine =1 
  BEAM_PROFILE = 'test.hdf'  
  QUIET_START = .true.  
- Parameter_Array(1:1,1:3) = 190.5,190.5,275.0 
- Parameter_Array(2:2,1:3) = 4.10129563089,1.8341551653,50.0 
+ Parameter_Array(1:1,1:3) = 90.5,90.5,215.3 
+ Parameter_Array(2:2,1:3) = 2.83176954196,1.26640583849,50.0 
  Parameter_Array(3:3,1:3) = 100.0,20.0,0.0 
  Parameter_Array(4:4,1:3) = 0.,0.,0. 
  Parameter_Array(5:5,1:3) = 0.,0.,0. 
@@ -160,8 +160,8 @@ Destroyer_Criteria(3,:) = upper bound
  Use_Destroyer = .true. 
  Destroyer_NCriteria = 5  
  Destroyer_Criteria(1:1,1:5)=1,1,2,2,6 
- Destroyer_Criteria(2:2,1:5)=0,379,0,379,0 
- Destroyer_Criteria(3:3,1:5)=2,381,2,381,100 
+ Destroyer_Criteria(2:2,1:5)=0,179,0,179,0 
+ Destroyer_Criteria(3:3,1:5)=2,181,2,181,100 
  Use_Radiation_Damping = .false. 
 / 
  
@@ -177,9 +177,9 @@ Plasma_Density: density for normalization,
                 not necessarily density of one species 
 ---------------------------------------------------- 
 &Plasma 
- Nspecies= 1 
- Nneutrals= 0 
- Plasma_Density= 5e+16 
+ Nspecies= 0 
+ Nneutrals= 1 
+ Plasma_Density= 2.2e+17 
 / 
  
 ------------Plasma Parameters------------------------- 
@@ -227,7 +227,7 @@ Density_Variation_s: corresponding propagation distances (in
 ------------------------------------------------------ 
 &Species 
  LOAD_BALANCE_TH = -0.08 
- NP2 = 512  
+ NP2 = 512.0  
  Charge = -1.0 
  Mass = 1.0 
  VT2X=0.0, VT2Y=0.0 
@@ -246,7 +246,7 @@ Density_Variation_s: corresponding propagation distances (in
  Density_Variation_s(1:6) = 6*0.0 
 / 
 &Neutral 
- Neutral_gas = 3 
+ Neutral_gas = 18 
  Neutral_z = 1 
 / 
  
@@ -255,7 +255,7 @@ TEND = Total time, DT = TimeStep
 In unit of 1/Omega_p. 
 ------------------------------------------------------ 
 &Simulation_time 
- TEND = 2101.0, DT = 19.0 
+ TEND = 17635.0, DT = 19.0 
 /  
  
 ------------ Diagnostic ------------------------------ 
@@ -301,20 +301,20 @@ direction for beam centroid calculation.
  
 &Field_Diag 
  DFE=0,  
- DFESLICE= 20, EX0= 0.0, EY0= 190.5, EZ0= 0.0 
+ DFESLICE= 20, EX0= 0.0, EY0= 90.5, EZ0= 0.0 
  DFB=0,  
- DFBSLICE= 20, BX0= 0.0, BY0= 190.5, BZ0= 0.0 
+ DFBSLICE= 20, BX0= 0.0, BY0= 90.5, BZ0= 0.0 
 / 
  
 &Beam_Diag 
  DFQEB=0,  
- DFQEBSLICE= 20 , QEBX0= 0.0, QEBY0= 190.5,  QEBZ0= 0.0, 
+ DFQEBSLICE= 20 , QEBX0= 0.0, QEBY0= 90.5,  QEBZ0= 0.0, 
  DFBC=0, BC_DIAG_RES= 64 
 / 
  
 &Plasma_Diag 
  DFQEP=0,  
- DFQEPSLICE= 20 , QEPX0= 0.0, QEPY0= 190.5,  QEPZ0= 0.0 
+ DFQEPSLICE= 20 , QEPX0= 0.0, QEPY0= 90.5,  QEPZ0= 0.0 
 / 
  
 ------------ Diagnostic ------------------------------ 
@@ -324,7 +324,7 @@ direction for beam centroid calculation.
  DSAMPLE :  spacing of sampling 
 ------------------------------------------------------ 
 &Beam_Phase_Space_Diag 
- DUMP_PHA_BEAM=.false., DFPHA_BEAM= 1,  
+ DUMP_PHA_BEAM=.true., DFPHA_BEAM= 20,  
  DSAMPLE_BEAM = 256 
 / 
  

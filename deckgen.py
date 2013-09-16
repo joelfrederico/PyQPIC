@@ -113,7 +113,7 @@ box_xy_fact = 1.0         # should be ~1-2
 box_z_fact  = 1.0         # should be ~1-2
 d_grid_fact = 0.05        # exact
 NP_xy_fact  = -1          # exact
-NP2_fact    = 1           # exact
+np_min      = 4           # exact
 DT_fact     = (2./3.)/10. # exact
 
 #-------------------
@@ -152,10 +152,14 @@ N_cell   = int(pow(2,ind_xy+ind_xy+ind_z))
 # box volume
 V_box    = box_xy*box_xy*box_z # um^3
 # beam particle density (power of 2)
-NP_xy    = int(pow(2,ind_xy+NP_xy_fact))
-NP_z     = int(pow(2,ind_z))
+# default "safe" values->
+NP_xy    = int(pow(2,7))
+NP_z     = int(pow(2,8))
+# dynamically assigned values->
+#NP_xy    = int(pow(2,ind_xy+NP_xy_fact))
+#NP_z     = int(pow(2,ind_z))
 # plasma particle density (power of 2)
-NP2      = max(int(pow(2,ind_xy+NP2_fact)),NP2_min)
+NP2      =round(math.sqrt(pow(pow(2,ind_xy),2)*max(np_cell,np_min)))
 # beam phase space sampling particle count
 ind_beam_pha = int(round(math.log(samp_beam_pha_N,2)))
 NP_beam_pha = int(pow(2,2*ind_xy+ind_z-ind_beam_pha))
@@ -172,7 +176,7 @@ C_z=[]
 for i in range(0,nbeam):
     C_x.append(0.5*box_xy + off_x[i]); # um
     C_y.append(0.5*box_xy + off_y[i]); # um
-    C_z.append(0.4*box_z  + off_z[i]); # um
+    C_z.append(0.3*box_z  + off_z[i]); # um
 
 #-------------------
 # Simulation Time Scales

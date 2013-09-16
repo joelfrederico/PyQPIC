@@ -74,8 +74,8 @@ off_z=[]
 # increment number of beams
 nbeam+=1
 # auto-match spot size to plasma?
-sig_x_matched.append (True ) # boolean
-sig_y_matched.append (True ) # boolean
+sig_x_matched.append (False) # boolean
+sig_y_matched.append (False) # boolean
 # auto-match emittance to plasma?
 en_x_matched.append  (False) # boolean
 en_y_matched.append  (False) # boolean
@@ -110,8 +110,8 @@ off_z.append( 0.         ) # um
 # increment number of beams
 nbeam+=1
 # auto-match spot size to plasma?
-sig_x_matched.append (True ) # boolean
-sig_y_matched.append (True ) # boolean
+sig_x_matched.append (False) # boolean
+sig_y_matched.append (False) # boolean
 # auto-match emittance to plasma?
 en_x_matched.append  (False) # boolean
 en_y_matched.append  (False) # boolean
@@ -143,13 +143,13 @@ off_z.append( 125.       ) # um
 # Plasma Parameters
 #-------------------
 # (initial) plasma density
-np         = 5.0E16    # cm^-3
+np         = 2.2E17    # cm^-3
 # plasma length (=sim length)
-Lp         = 5.0       # cm
+Lp         = 20.0      # cm
 # min plasma macro-particle density
-NP2_min    = 4         # per cell
+np_cell    = 4         # per cell
 # pre-formed/pre-ionized?
-preformed  = True      # boolean
+preformed  = False     # boolean
 # plasma spiecies atomic number
 # Note: only used if plasma is
 # not pre-formed
@@ -160,7 +160,7 @@ preformed  = True      # boolean
 # Ar: 18
 # Cs: 55
 # --------
-plasma_z   = 3
+plasma_z   = 18
 # maximum ionization level
 max_ion_lv = 1
 # --------
@@ -180,15 +180,15 @@ plasma_geom = 'flat'
 # simulated plasma length
 # ramp_dir=+1: up-ramp
 # ramp_dir=-1: down-ramp
-ramp_dir     = +1    # unitless
+ramp_dir     = +1      # unitless
 # ramp_width : gauss sigma
-ramp_width   = 10.0  # cm
+ramp_width   = 10.0E4  # um
 # --------
 # params for circular filament
 # (ignored if not circle)
 # --------
 # radius of filament
-plas_radius  = 10.0  # um
+plas_radius  = 10.0    # um
 
 #-------------------
 # Simulation Output Parameters
@@ -228,7 +228,7 @@ samp_plas_x0  = False # boolean
 samp_plas_y0  = True  # boolean
 samp_plas_z0  = False # boolean
 # Beam Phase Space
-samp_beam_pha = False # boolean
+samp_beam_pha = True  # boolean
 # Plasma Phase Space
 samp_plas_pha = False # boolean
 #-------------------
