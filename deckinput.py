@@ -7,30 +7,13 @@
 #-------------------
 # Verbosity Level of rpinput
 #-------------------
-verbose  = 1          # 1:on, 0:off
+verbose    = 0        # 1:on, 0:off
 
 #-------------------
 # Verbosity Level of QPIC Debugger
 # (not guaranteed to work)
 #-------------------
 qpic_debug = 0        # 1:on, 0:off
-
-#-------------------
-# Number of Processors
-#-------------------
-# total number of processors
-# you plan to use
-# (must be power of 2)
-#   8: good for fast jobs
-#  64: good for medium jobs
-# 128: good for long jobs
-TOT_PROC = 128        # processors
-
-#-------------------
-# Multi-Step Simulation
-#-------------------
-# is this a multi-step sim?
-is_multistep = True   # boolean
 
 #-------------------
 # Restart Runs
@@ -43,6 +26,42 @@ RST_START  = 1200     # dt
 # reset file dump period
 # (in units of sim. timestep)
 DRST_STEP  = 100      # dt
+
+#-------------------
+# Number of Processors
+#-------------------
+# total number of processors
+# you plan to use
+# (must be power of 2)
+#   8: good for fast jobs
+#  64: good for medium jobs
+# 128: good for long jobs
+TOT_PROC     = 128    # processors
+
+#-------------------
+# Multi-Step Simulation
+#-------------------
+# is this a multi-step sim?
+is_multistep = True   # boolean
+
+#-------------------
+# Simulation Length
+#-------------------
+L_sim        = 1.0    # cm
+
+#-------------------
+# Box Dimensions
+#-------------------
+# simulation box length
+# default: 2.5 x L_bubble or
+#          6.0 x sig_z
+# set to '0' to use default
+box_length = 600      # um
+# simulation box height/width
+# default: 4.0 x R_bubble or
+#          5.0 x sig_x/y
+# set to '0' to use default
+box_width  = 600      # um
 
 #-------------------
 # Initialize Beam Parameters
@@ -144,8 +163,6 @@ off_z.append( 125.       ) # um
 #-------------------
 # (initial) plasma density
 np         = 2.2E17    # cm^-3
-# plasma length (=sim length)
-Lp         = 20.0      # cm
 # min plasma macro-particle density
 np_cell    = 4         # per cell
 # pre-formed/pre-ionized?

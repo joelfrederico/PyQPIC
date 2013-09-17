@@ -120,18 +120,28 @@ DT_fact     = (2./3.)/10. # exact
 # Box Size and Particle Densities
 #-------------------
 # box size in x and y:
-box_xy   = int(round(                      \
-           box_xy_fact*max(4.0*R_bub,      \
-           5.0*max(max(sig_x),max(sig_y))) \
-           /5.)*5)                         # um
+# use specified size if given
+if (box_width>0):
+    box_xy = int(round(box_width/5.)*5)      # um
+# otherwise use default value
+else:
+    box_xy = int(round(                      \
+             box_xy_fact*max(4.0*R_bub,      \
+             5.0*max(max(sig_x),max(sig_y))) \
+             /5.)*5)                         # um
 # ensure box_xy is odd:
 if not(box_xy%2):
     box_xy += 1
 # box size in z
-box_z    = int(round(                      \
-           box_z_fact*max(2.5*L_bub,       \
-           6.0*max(sig_z))                 \
-           /5.)*5)                         # um
+# use specified size if given
+if (box_length>0):
+    box_z = int(round(box_length/5.)*5)     #um
+# otherwise use default value
+else:
+    box_z = int(round(                       \
+            box_z_fact*max(2.5*L_bub,        \
+            6.0*max(sig_z))                  \
+            /5.)*5)                          # um
 # ensure box_z is odd:
 if not(box_z%2):
     box_z  += 1
@@ -173,10 +183,12 @@ NP_plas_pha = int(pow(2,2*ind_xy+ind_z-ind_plas_pha))
 C_x=[]
 C_y=[]
 C_z=[]
+# beam centered in x & y
+# beam toward front of box in z
 for i in range(0,nbeam):
-    C_x.append(0.5*box_xy + off_x[i]); # um
-    C_y.append(0.5*box_xy + off_y[i]); # um
-    C_z.append(0.3*box_z  + off_z[i]); # um
+    C_x.append(0.5*box_xy   + off_x[i]); # um
+    C_y.append(0.5*box_xy   + off_y[i]); # um
+    C_z.append(4.0*sig_z[0] + off_z[i]); # um
 
 #-------------------
 # Simulation Time Scales
@@ -185,9 +197,9 @@ for i in range(0,nbeam):
 DT = round(DT_fact*math.sqrt(2.*gam[0])) # 1/wp
 # total simulation time
 if (is_multistep):
-    TEND = math.floor(Lp/cwp) # 1/wp
+    TEND = math.floor(L_sim/cwp) # 1/wp
 else:
-    TEND = DT*1.01            # 1/wp
+    TEND = DT*1.01               # 1/wp
 
 #-------------------
 # Beam Evolution
@@ -235,7 +247,7 @@ if   (plasma_geom=='flat'):
 elif (plasma_geom=='gauss'):
     plas_prof = int(3)
     plas_p1   = -1*ramp_dir
-    plas_p2   = ((1-ramp_dir)/2)*Lp
+    plas_p2   = ((1-ramp_dir)/2)*L_sim
     plas_p3   = 2*pow(ramp_width,2)
 # circular filament:
 # np(z) = np0*p2(r>p1) or 0(r<p1)
