@@ -5,7 +5,7 @@
 #===================================
 
 #-------------------
-# Verbosity Level of rpinput
+# Verbosity Level of rpinput File
 #-------------------
 verbose    = 0        # 1:on, 0:off
 
@@ -39,9 +39,22 @@ DRST_STEP  = 100      # dt
 TOT_PROC     = 128    # processors
 
 #-------------------
-# Multi-Step Simulation
+# Box Dimensions
 #-------------------
-# is this a multi-step sim?
+# simulation box length
+# default: 2.5 x L_bubble or
+#          6.0 x sig_z
+# set to '0' to use default
+box_length   = 600    # um
+# simulation box height/width
+# default: 4.0 x R_bubble or
+#          5.0 x sig_x/y
+# set to '0' to use default
+box_width    = 600    # um
+
+#-------------------
+# Multi-Step Simulation?
+#-------------------
 is_multistep = True   # boolean
 
 #-------------------
@@ -50,18 +63,53 @@ is_multistep = True   # boolean
 L_sim        = 1.0    # cm
 
 #-------------------
-# Box Dimensions
+# Plasma Parameters
 #-------------------
-# simulation box length
-# default: 2.5 x L_bubble or
-#          6.0 x sig_z
-# set to '0' to use default
-box_length = 600      # um
-# simulation box height/width
-# default: 4.0 x R_bubble or
-#          5.0 x sig_x/y
-# set to '0' to use default
-box_width  = 600      # um
+# (initial) plasma density
+np         = 2.2E17   # cm^-3
+# min plasma macro-particle density
+np_cell    = 4        # per cell
+# pre-formed/pre-ionized?
+preformed  = False    # boolean
+# plasma spiecies atomic number
+# Note: only used if plasma is
+# not pre-formed
+# --------
+# H : 1
+# Li: 3
+# He: 2
+# Ar: 18
+# Cs: 55
+# --------
+plasma_z   = 18
+# maximum ionization level
+max_ion_lv = 1
+# --------
+# plasma geometry
+# --------
+#  'flat'  : constant density
+#  'gauss' : gaussian ramp
+#  'circle': circular filament
+# --------
+plasma_geom = 'flat'
+# --------
+# params for gaussian ramp
+# (ignored if not ramp)
+# --------
+# NOTE: ramp min occurs at
+# very beginning or end of
+# simulated plasma length
+# ramp_dir=+1: up-ramp
+# ramp_dir=-1: down-ramp
+ramp_dir     = +1
+# ramp_width : gauss sigma
+ramp_width   = 10.0E4  # um
+# --------
+# params for circular filament
+# (ignored if not circle)
+# --------
+# radius of filament
+plas_radius  = 10.0    # um
 
 #-------------------
 # Initialize Beam Parameters
@@ -111,7 +159,8 @@ sig_y.append( 30.        ) # um
 en_x.append ( 100.       ) # mm-mrad
 en_y.append ( 20.        ) # mm-mrad
 # bunch energy spread
-dp.append   ( 0.00       )
+# NOTE: Doesn't work! Set to '0'
+dp.append   ( 0.00       ) # (unitless)
 # bunch drift velocity
 # (keep set to '0' for now)
 v_x.append  ( 0.         ) # c
@@ -147,7 +196,8 @@ sig_y.append( 30.        ) # um
 en_x.append ( 100.       ) # mm-mrad
 en_y.append ( 20.        ) # mm-mrad
 # bunch energy spread
-dp.append   ( 0.00       )
+# NOTE: Doesn't work! Set to '0'
+dp.append   ( 0.00       ) # (unitless)
 # bunch drift velocity
 # (keep set to '0' for now)
 v_x.append  ( 0.         ) # c
@@ -157,55 +207,6 @@ v_z.append  ( 0.         ) # c
 off_x.append( 0.         ) # um
 off_y.append( 0.         ) # um
 off_z.append( 125.       ) # um
-
-#-------------------
-# Plasma Parameters
-#-------------------
-# (initial) plasma density
-np         = 2.2E17    # cm^-3
-# min plasma macro-particle density
-np_cell    = 4         # per cell
-# pre-formed/pre-ionized?
-preformed  = False     # boolean
-# plasma spiecies atomic number
-# Note: only used if plasma is
-# not pre-formed
-# --------
-# H : 1
-# Li: 3
-# He: 2
-# Ar: 18
-# Cs: 55
-# --------
-plasma_z   = 18
-# maximum ionization level
-max_ion_lv = 1
-# --------
-# plasma geometry
-# --------
-#  'flat'  : constant density
-#  'gauss' : gaussian ramp
-#  'circle': circular filament
-# --------
-plasma_geom = 'flat'
-# --------
-# params for gaussian ramp
-# (ignored if not ramp)
-# --------
-# NOTE: ramp min occurs at
-# very beginning or end of
-# simulated plasma length
-# ramp_dir=+1: up-ramp
-# ramp_dir=-1: down-ramp
-ramp_dir     = +1      # unitless
-# ramp_width : gauss sigma
-ramp_width   = 10.0E4  # um
-# --------
-# params for circular filament
-# (ignored if not circle)
-# --------
-# radius of filament
-plas_radius  = 10.0    # um
 
 #-------------------
 # Simulation Output Parameters

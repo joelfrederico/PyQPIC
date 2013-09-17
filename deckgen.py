@@ -50,19 +50,19 @@ VERBOSE = qpic_debug
 # Fundamental Constants
 #-------------------
 # speed of light
-c      = 3.E10  # cm/s
+c      = 3.E10    # cm/s
 # charge of electron
-qe     = 1.6E-19
+qe     = 1.6E-19  # C
 # pi = 3.14...
 pi     = math.pi
 # microns to centimeters
-um2cm  = 1.E-4  # um->cm
+um2cm  = 1.E-4    # cm/um
 # centimeters to microns
-cm2um  = 1.E4   # cm->um
+cm2um  = 1.E4     # um/cm
 # centimeters to meters
-cm2m   = 0.01
+cm2m   = 0.01     # m/cm
 # meters to centimeters
-m2cm   = 100.
+m2cm   = 100.     # cm/m
 
 #-------------------
 # Calculated Plasma Parameters
@@ -135,7 +135,7 @@ if not(box_xy%2):
 # box size in z
 # use specified size if given
 if (box_length>0):
-    box_z = int(round(box_length/5.)*5)     #um
+    box_z = int(round(box_length/5.)*5)      #um
 # otherwise use default value
 else:
     box_z = int(round(                       \
@@ -146,7 +146,7 @@ else:
 if not(box_z%2):
     box_z  += 1
 # grid spacing
-d_grid   = d_grid_fact*cwp*cm2um           # um
+d_grid   = d_grid_fact*cwp*cm2um             # um
 # number of cells (power of 2)
 ind_xy   = int(max(round(math.log(box_xy/d_grid,2)),6))
 ind_z    = int(max(round(math.log(box_z/d_grid,2)),6))
