@@ -95,15 +95,15 @@ r_sheath = 1.287*R_bub         # um
 #-------------------
 # auto-match spot size to plasma
 for i in range(0,nbeam):
-    if (sig_x_matched):
+    if (sig_x_matched[i]):
         sig_x[i] = math.sqrt(en_x[i]*(cm2um/kp)*math.sqrt(2/gam[i]))
-    if (sig_y_matched):
+    if (sig_y_matched[i]):
         sig_y[i] = math.sqrt(en_y[i]*(cm2um/kp)*math.sqrt(2/gam[i]))
 # auto-match emittance to plasma
 for i in range(0,nbeam):
-    if (en_x_matched):
+    if (en_x_matched[i]):
         en_x[i] = pow(sig_x[i],2)*(kp/cm2um)*math.sqrt(gam[i]/2)
-    if (en_y_matched):
+    if (en_y_matched[i]):
         en_y[i] = pow(sig_y[i],2)*(kp/cm2um)*math.sqrt(gam[i]/2)
 
 #-------------------

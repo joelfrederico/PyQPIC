@@ -7,7 +7,7 @@
 #-------------------
 # Verbosity Level of rpinput File
 #-------------------
-verbose    = 0        # 1:on, 0:off
+verbose    = 1        # 1:on, 0:off
 
 #-------------------
 # Verbosity Level of QPIC Debugger
@@ -45,12 +45,12 @@ TOT_PROC     = 128    # processors
 # default: 2.5 x L_bubble or
 #          6.0 x sig_z
 # set to '0' to use default
-box_length   = 600    # um
+box_length   = 0      # um
 # simulation box height/width
 # default: 4.0 x R_bubble or
 #          5.0 x sig_x/y
 # set to '0' to use default
-box_width    = 600    # um
+box_width    = 0      # um
 
 #-------------------
 # Multi-Step Simulation?
@@ -60,7 +60,7 @@ is_multistep = True   # boolean
 #-------------------
 # Simulation Length
 #-------------------
-L_sim        = 1.0    # cm
+L_sim        =  20.0  # cm
 
 #-------------------
 # Plasma Parameters
@@ -70,7 +70,7 @@ np         = 2.2E17   # cm^-3
 # min plasma macro-particle density
 np_cell    = 4        # per cell
 # pre-formed/pre-ionized?
-preformed  = False    # boolean
+preformed  = True     # boolean
 # plasma spiecies atomic number
 # Note: only used if plasma is
 # not pre-formed
@@ -91,7 +91,7 @@ max_ion_lv = 1
 #  'gauss' : gaussian ramp
 #  'circle': circular filament
 # --------
-plasma_geom = 'flat'
+plasma_geom = 'circle'
 # --------
 # params for gaussian ramp
 # (ignored if not ramp)
@@ -147,17 +147,17 @@ sig_y_matched.append (False) # boolean
 en_x_matched.append  (False) # boolean
 en_y_matched.append  (False) # boolean
 # relativistic gamma factor
-gam.append  ( 40000.     ) # (unitless)
+gam.append  ( 39823.87   ) # (unitless)
 # bunch charge
 Q.append    ( int(3.4E9) ) # e
 # bunch length
 sig_z.append( 20.        ) # um
 # bunch spot size
-sig_x.append( 30.        ) # um
-sig_y.append( 30.        ) # um
+sig_x.append( 20.        ) # um
+sig_y.append( 20.        ) # um
 # bunch noralized emittance
-en_x.append ( 100.       ) # mm-mrad
-en_y.append ( 20.        ) # mm-mrad
+en_x.append ( 75.        ) # mm-mrad
+en_y.append ( 15.        ) # mm-mrad
 # bunch energy spread
 # NOTE: Doesn't work! Set to '0'
 dp.append   ( 0.00       ) # (unitless)
@@ -184,17 +184,17 @@ sig_y_matched.append (False) # boolean
 en_x_matched.append  (False) # boolean
 en_y_matched.append  (False) # boolean
 # relativistic gamma factor
-gam.append  ( 40000.     ) # (unitless)
+gam.append  ( 39823.87   ) # (unitless)
 # bunch charge
 Q.append    ( int(5.5E9) ) # e
 # bunch length
 sig_z.append( 50.        ) # um
 # bunch spot size
-sig_x.append( 30.        ) # um
-sig_y.append( 30.        ) # um
+sig_x.append( 20.        ) # um
+sig_y.append( 20.        ) # um
 # bunch noralized emittance
-en_x.append ( 100.       ) # mm-mrad
-en_y.append ( 20.        ) # mm-mrad
+en_x.append ( 75.        ) # mm-mrad
+en_y.append ( 15.        ) # mm-mrad
 # bunch energy spread
 # NOTE: Doesn't work! Set to '0'
 dp.append   ( 0.00       ) # (unitless)
