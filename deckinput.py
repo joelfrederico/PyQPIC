@@ -60,7 +60,48 @@ is_multistep = True   # boolean
 #-------------------
 # Simulation Length
 #-------------------
-L_sim        =  20.0  # cm
+L_sim        =  27.576  # cm
+
+
+
+#-------------------
+# Initialize Plasma Parameters
+#-------------------
+nplas=0
+plas_dens=[]
+plas_np_cell=[]
+plas_rad_geom=[]
+plas_rad_geom_param=[]
+plas_long_geom=[]
+plas_long_geom_param=[]
+
+nneut=0
+neut_z=[]
+neut_ion_lv=[]
+neut_dens=[]
+neut_np_cell=[]
+neut_rad_geom=[]
+neut_rad_geom_param=[]
+neut_long_geom=[]
+neut_long_geom_param=[]
+
+#-------------------
+# Plasma Parameters - Argon Filament
+#-------------------
+# increment number of plasmas
+nplas+=1
+# nominal or maximum density
+dens_plas.append    (2.2E17  )   # cm^-3
+# min macro-particle density
+np_cell.append      (4       )   # per cell
+# radial geometry profile
+plas_rad_geom.append('circle')
+# radial geometry parameters
+plas_rad_geom_param1.append(10.0) # um
+plas_rad_geom_param2.append(1.0)
+plas_rad_geom_param3.append(1)
+
+
 
 #-------------------
 # Plasma Parameters

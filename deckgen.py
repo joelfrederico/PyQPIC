@@ -243,11 +243,11 @@ if   (plasma_geom=='flat'):
 # np(z) = np0(1+p1*exp(-((z-p2)/p3)^2))
 # p1: height of peak w.r.t. np0
 # p2: offset of peak
-# p3: 2*sig^2
+# p3: sqrt(2)*sig
 elif (plasma_geom=='gauss'):
     plas_prof = int(3)
     plas_p1   = -1*ramp_dir
-    plas_p2   = ((1-ramp_dir)/2)*L_sim
+    plas_p2   = 0 #((1-ramp_dir)/2)*L_sim
     plas_p3   = 2*pow(ramp_width,2)
 # circular filament:
 # np(z) = np0*p2(r>p1) or 0(r<p1)
