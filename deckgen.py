@@ -5,8 +5,7 @@
 #========================
 
 import sys
-import math
-import array
+from numpy import *
 
 # - - - - - - - - - - - - - - - - - - - - -
 # Read in Input Values
@@ -68,7 +67,7 @@ m2cm   = 100.     # cm/m
 # Calculated Plasma Parameters
 #-------------------
 # plasma frequency
-wp     = (5.64E4)*math.sqrt(np) # rad/s
+wp     = (5.64E4)*sqrt(np) # rad/s
 # characteristic length
 cwp    = c/wp                   # cm
 # wavenumber
@@ -78,13 +77,13 @@ kp     = 1/cwp                  # 1/cm
 # Calculated Peak Current
 #-------------------
 # peak current of drive bunch
-Lambda = Q[0]*qe*c/(math.sqrt(2*pi)*sig_z[0]*um2cm) # A
+Lambda = Q[0]*qe*c/(sqrt(2*pi)*sig_z[0]*um2cm) # A
 
 #-------------------
 # Calculated Plasma Bubble Size
 #-------------------
 # max bubble radius
-R_bub    = 2.58*math.sqrt((Lambda/(qe*c))*(1/np))*cm2um # um
+R_bub    = 2.58*sqrt((Lambda/(qe*c))*(1/np))*cm2um # um
 # bubble length
 L_bub    = 2*pi*cwp*cm2um      # um
 # outer radius of bubble sheath
@@ -96,15 +95,15 @@ r_sheath = 1.287*R_bub         # um
 # auto-match spot size to plasma
 for i in range(0,nbeam):
     if (sig_x_matched[i]):
-        sig_x[i] = math.sqrt(en_x[i]*(cm2um/kp)*math.sqrt(2/gam[i]))
+        sig_x[i] = sqrt(en_x[i]*(cm2um/kp)*sqrt(2/gam[i]))
     if (sig_y_matched[i]):
-        sig_y[i] = math.sqrt(en_y[i]*(cm2um/kp)*math.sqrt(2/gam[i]))
+        sig_y[i] = sqrt(en_y[i]*(cm2um/kp)*sqrt(2/gam[i]))
 # auto-match emittance to plasma
 for i in range(0,nbeam):
     if (en_x_matched[i]):
-        en_x[i] = pow(sig_x[i],2)*(kp/cm2um)*math.sqrt(gam[i]/2)
+        en_x[i] = pow(sig_x[i],2)*(kp/cm2um)*sqrt(gam[i]/2)
     if (en_y_matched[i]):
-        en_y[i] = pow(sig_y[i],2)*(kp/cm2um)*math.sqrt(gam[i]/2)
+        en_y[i] = pow(sig_y[i],2)*(kp/cm2um)*sqrt(gam[i]/2)
 
 #-------------------
 # "Magic" Simulation Factors
@@ -148,8 +147,8 @@ if not(box_z%2):
 # grid spacing
 d_grid   = d_grid_fact*cwp*cm2um             # um
 # number of cells (power of 2)
-ind_xy   = int(max(round(math.log(box_xy/d_grid,2)),6))
-ind_z    = int(max(round(math.log(box_z/d_grid,2)),6))
+ind_xy   = int(max(round(log2(box_xy/d_grid)),6))
+ind_z    = int(max(round(log2(box_z/d_grid)),6))
 # limit number of cells in each dimension
 if (ind_xy>8):
     ind_xy=8
@@ -169,12 +168,12 @@ NP_z     = int(pow(2,8))
 #NP_xy    = int(pow(2,ind_xy+NP_xy_fact))
 #NP_z     = int(pow(2,ind_z))
 # plasma particle density (power of 2)
-NP2      =round(math.sqrt(pow(pow(2,ind_xy),2)*max(np_cell,np_min)))
+NP2      =round(sqrt(pow(pow(2,ind_xy),2)*max(np_cell,np_min)))
 # beam phase space sampling particle count
-ind_beam_pha = int(round(math.log(samp_beam_pha_N,2)))
+ind_beam_pha = int(round(log2(samp_beam_pha_N)))
 NP_beam_pha = int(pow(2,2*ind_xy+ind_z-ind_beam_pha))
 # plasma phase space sampling particle count
-ind_plas_pha = int(round(math.log(samp_plas_pha_N,2)))
+ind_plas_pha = int(round(log2(samp_plas_pha_N)))
 NP_plas_pha = int(pow(2,2*ind_xy+ind_z-ind_plas_pha))
 
 #-------------------
@@ -194,10 +193,10 @@ for i in range(0,nbeam):
 # Simulation Time Scales
 #-------------------
 # time step size
-DT = round(DT_fact*math.sqrt(2.*gam[0])) # 1/wp
+DT = round(DT_fact*sqrt(2.*gam[0])) # 1/wp
 # total simulation time
 if (is_multistep):
-    TEND = math.floor(L_sim/cwp) # 1/wp
+    TEND = floor(L_sim/cwp) # 1/wp
 else:
     TEND = DT*1.01               # 1/wp
 
@@ -226,35 +225,64 @@ MAX_ION = int(max_ion_lv)
 #-------------------
 # Plasma Geometry
 #-------------------
-# initialize plasma parameters
+# initialize transverse plasma parameters
 plas_p1 = 1
 plas_p2 = 1
 plas_p3 = 1
-# set profile code
+# set transverse profile code
 # --------
 #  0: flat
 #  3: gaussian ramp
 # 19: circle
+# 21: piecewise (custom)
 # --------
-# flat density profile:
-if   (plasma_geom=='flat'):
+# flat transverse profile:
+# np(r) = np0
+if   (plasma_trans_geom=='flat'):
     plas_prof = int(0)
-# gaussian ramp:
-# np(z) = np0(1+p1*exp(-((z-p2)/p3)^2))
+# gaussian transverse  profile:
+# np(r) = np0(1+p1*exp(-((r-p2)/p3)^2))
 # p1: height of peak w.r.t. np0
 # p2: offset of peak
 # p3: sqrt(2)*sig
-elif (plasma_geom=='gauss'):
+elif (plasma_trans_geom=='gauss'):
     plas_prof = int(3)
     plas_p1   = -1*ramp_dir
-    plas_p2   = 0 #((1-ramp_dir)/2)*L_sim
+    plas_p2   = ((1-ramp_dir)/2)*L_sim
     plas_p3   = 2*pow(ramp_width,2)
 # circular filament:
-# np(z) = np0*p2(r>p1) or 0(r<p1)
-elif (plasma_geom=='circle'):
+# np(r) = np0*p2(r>p1) or 0(r<p1)
+elif (plasma_trans_geom=='circle'):
     plas_prof = int(19)
     plas_p1 = plas_radius
     plas_p2 = 1.0
+
+# longitudinal density profile
+# --------
+# initialize longitudinal density parameters
+z_max   = 1
+z_nstep = 1
+z_step  = 1
+z_prof  = 1
+# --------
+# define gaussian ramp function
+def gaussramps(A,z1,sig1,z2,sig2,z):    
+    return A*(
+    (z<z1)*exp(-pow(z-z1,2)/(2*pow(sig1,2)))+
+    (z>=z1)*(z<=z2)+
+    (z>z2)*exp(-pow(z-z2,2)/(2*pow(sig2,2))))
+# --------
+# flat longitudinal profile
+if   (plasma_long_geom=='flat'):
+    dense_var = "false"
+# gaussian ramps profile
+elif (plasma_long_geom=='gauss'):
+    dense_var = "true"
+    z_max   = TEND*cwp*cm2um # um
+    z_nstep = min(100,floor(TEND/DT))
+    z_step  = linspace(0,z_max,z_nstep) # um
+    z_prof = gaussramps(1,flat_start,upramp_sig,
+              flat_end,dnramp_sig,z_step) # np
 
 #-------------------
 # Simulation Output Parameters

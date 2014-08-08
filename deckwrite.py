@@ -287,10 +287,10 @@ deckstr+=(\
  Prof_Nsec = 9  \n\
  Prof_Parameter(1,1:9) = 0.1,0.1,1,1,0.05,0.05,1,1,0 \n\
  Prof_Parameter(2,1:9) = 0,20,20.1,40,40.1,60,60.1,90,95 \n\
- Density_Variation=.false. \n\
- Density_Variation_Nsec=6 \n\
- Density_Variation_Fs(1:6) = 6*0.0 \n\
- Density_Variation_s(1:6) = 6*0.0 \n\
+ Density_Variation=."+str(dense_var)+". \n\
+ Density_Variation_Nsec="+str(z_nstep)+" \n\
+ Density_Variation_Fs(1:"+str(z_nstep)+") = "+str(z_prof)+" \n\
+ Density_Variation_s(1"+str(z_nstep)+":) = "+str(z_step)+" \n\
 / \n\
 &Neutral \n\
  Neutral_gas = "+str(Z_PLAS)+" \n\

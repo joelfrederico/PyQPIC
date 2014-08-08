@@ -60,12 +60,13 @@ is_multistep = True   # boolean
 #-------------------
 # Simulation Length
 #-------------------
-L_sim        =  27.576  # cm
+L_sim        =  90  # cm
 
 
 
 #-------------------
 # Initialize Plasma Parameters
+# (Do not touch.)
 #-------------------
 nplas=0
 plas_dens=[]
@@ -85,28 +86,28 @@ neut_rad_geom_param=[]
 neut_long_geom=[]
 neut_long_geom_param=[]
 
-#-------------------
-# Plasma Parameters - Argon Filament
-#-------------------
-# increment number of plasmas
-nplas+=1
-# nominal or maximum density
-dens_plas.append    (2.2E17  )   # cm^-3
-# min macro-particle density
-np_cell.append      (4       )   # per cell
-# radial geometry profile
-plas_rad_geom.append('circle')
-# radial geometry parameters
-plas_rad_geom_param1.append(10.0) # um
-plas_rad_geom_param2.append(1.0)
-plas_rad_geom_param3.append(1)
+# #-------------------
+# # Plasma Parameters - Argon Filament
+# #-------------------
+# # increment number of plasmas
+# nplas+=1
+# # nominal or maximum density
+# dens_plas.append    (2.2E17  )   # cm^-3
+# # min macro-particle density
+# np_cell.append      (4       )   # per cell
+# # radial geometry profile
+# plas_rad_geom.append('circle')
+# # radial geometry parameters
+# plas_rad_geom_param1.append(10.0) # um
+# plas_rad_geom_param2.append(1.0)
+# plas_rad_geom_param3.append(1)
 
 
 
 #-------------------
 # Plasma Parameters
 #-------------------
-# (initial) plasma density
+# (flat-top) plasma density
 np         = 2.2E17   # cm^-3
 # min plasma macro-particle density
 np_cell    = 4        # per cell
@@ -122,35 +123,38 @@ preformed  = True     # boolean
 # Ar: 18
 # Cs: 55
 # --------
-plasma_z   = 18
+plasma_z   = 1
 # maximum ionization level
 max_ion_lv = 1
+
 # --------
-# plasma geometry
+# transverse plasma geometry
 # --------
 #  'flat'  : constant density
-#  'gauss' : gaussian ramp
+#  'gauss' : gaussian ramps
 #  'circle': circular filament
 # --------
-plasma_geom = 'circle'
+plasma_trans_geom = 'flat'
+
 # --------
-# params for gaussian ramp
-# (ignored if not ramp)
+# longitudinal plasma geometry
 # --------
-# NOTE: ramp min occurs at
-# very beginning or end of
-# simulated plasma length
-# ramp_dir=+1: up-ramp
-# ramp_dir=-1: down-ramp
-ramp_dir     = +1
-# ramp_width : gauss sigma
-ramp_width   = 10.0E4  # um
+#  'flat'  : constant density
+#  'gauss' : gaussian ramps
 # --------
-# params for circular filament
-# (ignored if not circle)
+plasma_long_geom = 'gauss'
+
 # --------
-# radius of filament
-plas_radius  = 10.0    # um
+# params for gaussian ramps
+# --------
+# upramp length (sigma)
+upramp_sig  = 15.0E4  # um
+# flat-top start
+flat_start  = 30.0E4  # um
+# flat-top end
+flat_end    = 60.0E4  # um
+# downramp length (sigma)
+dnramp_sig  = 15.0E4  # um
 
 #-------------------
 # Initialize Beam Parameters
