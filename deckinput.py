@@ -4,6 +4,8 @@
 # Inputs for QuickPIC Deck Generator
 #===================================
 
+from numpy import *
+
 #-------------------
 # Verbosity Level of rpinput File
 #-------------------
@@ -44,12 +46,12 @@ TOT_PROC     = 128    # processors
 # simulation box length
 # default: 2.5 x L_bubble or
 #          6.0 x sig_z
-# set to '0' to use default
+# set to '0' for automatic setting
 box_length   = 0      # um
 # simulation box height/width
 # default: 4.0 x R_bubble or
 #          5.0 x sig_x/y
-# set to '0' to use default
+# set to '0' for automatic setting
 box_width    = 0      # um
 
 #-------------------
@@ -60,32 +62,32 @@ is_multistep = True   # boolean
 #-------------------
 # Simulation Length
 #-------------------
-L_sim        =  90  # cm
+L_sim        =  5  # cm
 
 
 
-#-------------------
-# Initialize Plasma Parameters
-# (Do not touch.)
-#-------------------
-nplas=0
-plas_dens=[]
-plas_np_cell=[]
-plas_rad_geom=[]
-plas_rad_geom_param=[]
-plas_long_geom=[]
-plas_long_geom_param=[]
-
-nneut=0
-neut_z=[]
-neut_ion_lv=[]
-neut_dens=[]
-neut_np_cell=[]
-neut_rad_geom=[]
-neut_rad_geom_param=[]
-neut_long_geom=[]
-neut_long_geom_param=[]
-
+# #-------------------
+# # Initialize Plasma Parameters
+# # (Do not touch.)
+# #-------------------
+# nplas=0
+# plas_dens=[]
+# plas_np_cell=[]
+# plas_rad_geom=[]
+# plas_rad_geom_param=[]
+# plas_long_geom=[]
+# plas_long_geom_param=[]
+# 
+# nneut=0
+# neut_z=[]
+# neut_ion_lv=[]
+# neut_dens=[]
+# neut_np_cell=[]
+# neut_rad_geom=[]
+# neut_rad_geom_param=[]
+# neut_long_geom=[]
+# neut_long_geom_param=[]
+# 
 # #-------------------
 # # Plasma Parameters - Argon Filament
 # #-------------------
@@ -108,7 +110,7 @@ neut_long_geom_param=[]
 # Plasma Parameters
 #-------------------
 # (flat-top) plasma density
-np         = 2.2E17   # cm^-3
+np         = 5.0E16   # cm^-3
 # min plasma macro-particle density
 np_cell    = 4        # per cell
 # pre-formed/pre-ionized?
@@ -145,7 +147,8 @@ plasma_trans_geom = 'flat'
 plasma_long_geom = 'gauss'
 
 # --------
-# params for gaussian ramps
+# longitudinal plasma params 
+# for gaussian ramps
 # --------
 # upramp length (sigma)
 upramp_sig  = 15.0E4  # um
@@ -166,9 +169,12 @@ en_x_matched=[]
 en_y_matched=[]
 gam=[]
 Q=[]
+waist=[]
 sig_z=[]
 sig_x=[]
 sig_y=[]
+beta_x=[]
+beta_y=[]
 en_x=[]
 en_y=[]
 dp=[]
@@ -178,6 +184,12 @@ v_z=[]
 off_x=[]
 off_y=[]
 off_z=[]
+sig_x0=[]
+sig_y0=[]
+beta_x0=[]
+beta_y0=[]
+alpha_x0=[]
+alpha_y0=[]
 
 #-------------------
 # Beam Parameters - Drive Bunch
@@ -189,20 +201,22 @@ nbeam+=1
 sig_x_matched.append (False) # boolean
 sig_y_matched.append (False) # boolean
 # auto-match emittance to plasma?
-en_x_matched.append  (False) # boolean
-en_y_matched.append  (False) # boolean
+en_x_matched.append  (True) # boolean
+en_y_matched.append  (True) # boolean
 # relativistic gamma factor
 gam.append  ( 39823.87   ) # (unitless)
 # bunch charge
-Q.append    ( int(3.4E9) ) # e
+Q.append    ( int(2.0E10)) # e
 # bunch length
-sig_z.append( 20.        ) # um
-# bunch spot size
-sig_x.append( 20.        ) # um
-sig_y.append( 20.        ) # um
+sig_z.append( 30.        ) # um
+# bunch spot size at waist in vacuum
+sig_x.append( 30.        ) # um
+sig_y.append( 30.        ) # um
 # bunch noralized emittance
-en_x.append ( 75.        ) # mm-mrad
-en_y.append ( 15.        ) # mm-mrad
+en_x.append ( 350.       ) # mm-mrad
+en_y.append ( 35.        ) # mm-mrad
+# bunch waist location from start
+waist.append( 15.        ) # cm
 # bunch energy spread
 # NOTE: Doesn't work! Set to '0'
 dp.append   ( 0.00       ) # (unitless)
@@ -226,20 +240,22 @@ nbeam+=1
 sig_x_matched.append (False) # boolean
 sig_y_matched.append (False) # boolean
 # auto-match emittance to plasma?
-en_x_matched.append  (False) # boolean
-en_y_matched.append  (False) # boolean
+en_x_matched.append  (True) # boolean
+en_y_matched.append  (True) # boolean
 # relativistic gamma factor
-gam.append  ( 39823.87   ) # (unitless)
+gam.append  ( 1000       ) # (unitless)
 # bunch charge
-Q.append    ( int(5.5E9) ) # e
+Q.append    ( int(1.0E9) ) # e
 # bunch length
-sig_z.append( 50.        ) # um
-# bunch spot size
-sig_x.append( 20.        ) # um
-sig_y.append( 20.        ) # um
+sig_z.append( 10.        ) # um
+# bunch spot size at waist in vacuum
+sig_x.append( 10.        ) # um
+sig_y.append( 10.        ) # um
 # bunch noralized emittance
-en_x.append ( 75.        ) # mm-mrad
-en_y.append ( 15.        ) # mm-mrad
+en_x.append ( 1.         ) # mm-mrad
+en_y.append ( 1.         ) # mm-mrad
+# bunch waist location from start
+waist.append( 15.        ) # cm
 # bunch energy spread
 # NOTE: Doesn't work! Set to '0'
 dp.append   ( 0.00       ) # (unitless)

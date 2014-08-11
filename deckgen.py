@@ -106,6 +106,19 @@ for i in range(0,nbeam):
         en_y[i] = pow(sig_y[i],2)*(kp/cm2um)*sqrt(gam[i]/2)
 
 #-------------------
+# Initial beam parameters
+#-------------------
+for i in range(0,nbeam):
+    beta_x.append   ( pow(sig_x[i],2)/en_x[i] )
+    beta_y.append   ( pow(sig_y[i],2)/en_y[i] )
+    beta_x0.append  ( beta_x[i] + pow(waist[i],2)/beta_x[i] )
+    beta_y0.append  ( beta_y[i] + pow(waist[i],2)/beta_y[i] )
+    alpha_x0.append ( waist[i]/beta_x[i] )
+    alpha_y0.append ( waist[i]/beta_y[i] )
+    sig_x0.append   ( sqrt(en_x[i]*beta_x0[i]) )
+    sig_y0.append   ( sqrt(en_y[i]*beta_y0[i]) )
+
+#-------------------
 # "Magic" Simulation Factors
 #-------------------
 box_xy_fact = 1.0         # should be ~1-2

@@ -169,11 +169,11 @@ for i in range(0,nbeam):
  Gamma = "+str(gam[i])+" \n\
  Num_Particle = "+str(Q[i])+" \n\
  VDX = "+str(v_x[i])+", VDY = "+str(v_y[i])+", VDZ = "+str(v_z[i])+" \n\
- Init_Routine =1 \n\
+ Init_Routine =5 \n\
  BEAM_PROFILE = 'test.hdf'  \n\
  QUIET_START = .true.  \n\
  Parameter_Array(1:1,1:3) = "+str(C_x[i])+","+str(C_y[i])+","+str(C_z[i])+" \n\
- Parameter_Array(2:2,1:3) = "+str(sig_x[i])+","+str(sig_y[i])+","+str(sig_z[i])+" \n\
+ Parameter_Array(2:2,1:3) = "+str(alpha_x0[i])+","+str(beta_x0[i])+","+str(alpha_y0[i])+","+str(beta_y0[i])+","+str(sig_z[i])+" \n\
  Parameter_Array(3:3,1:3) = "+str(en_x[i])+","+str(en_y[i])+","+str(dp[i])+" \n\
  Parameter_Array(4:4,1:3) = 0.,0.,0. \n\
  Parameter_Array(5:5,1:3) = 0.,0.,0. \n\
@@ -289,8 +289,8 @@ deckstr+=(\
  Prof_Parameter(2,1:9) = 0,20,20.1,40,40.1,60,60.1,90,95 \n\
  Density_Variation=."+str(dense_var)+". \n\
  Density_Variation_Nsec="+str(z_nstep)+" \n\
- Density_Variation_Fs(1:"+str(z_nstep)+") = "+str(z_prof)+" \n\
- Density_Variation_s(1"+str(z_nstep)+":) = "+str(z_step)+" \n\
+ Density_Variation_Fs(1:"+str(z_nstep)+") = "+' '.join(map(str,z_prof))+" \n\
+ Density_Variation_s(1"+str(z_nstep)+":) = "+' '.join(map(str,z_step))+" \n\
 / \n\
 &Neutral \n\
  Neutral_gas = "+str(Z_PLAS)+" \n\
