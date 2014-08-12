@@ -118,7 +118,7 @@ Destroyer_Criteria(3,:) = upper bound
  BEAM_PROFILE = 'test.hdf'  
  QUIET_START = .true.  
  Parameter_Array(1:1,1:3) = 377.5,377.5,120.0 
- Parameter_Array(2:2,1:3) = 88.9796807968,1334.86378977,88.9796807968,1334.86378977,30.0 
+ Parameter_Array(2:2,1:5) = 0.0,0.168577813111,0.0,0.168577813111,30.0 
  Parameter_Array(3:3,1:3) = 5338.78084781,5338.78084781,0.0 
  Parameter_Array(4:4,1:3) = 0.,0.,0. 
  Parameter_Array(5:5,1:3) = 0.,0.,0. 
@@ -148,7 +148,7 @@ Destroyer_Criteria(3,:) = upper bound
  BEAM_PROFILE = 'test.hdf'  
  QUIET_START = .true.  
  Parameter_Array(1:1,1:3) = 377.5,377.5,245.0 
- Parameter_Array(2:2,1:3) = 14.1,212.563829787,14.1,212.563829787,10.0 
+ Parameter_Array(2:2,1:5) = 0.0,1.06382978723,0.0,1.06382978723,10.0 
  Parameter_Array(3:3,1:3) = 94.0,94.0,0.0 
  Parameter_Array(4:4,1:3) = 0.,0.,0. 
  Parameter_Array(5:5,1:3) = 0.,0.,0. 
@@ -242,8 +242,8 @@ Density_Variation_s: corresponding propagation distances (in
  Prof_Parameter(2,1:9) = 0,20,20.1,40,40.1,60,60.1,90,95 
  Density_Variation=.false. 
  Density_Variation_Nsec=1 
- Density_Variation_Fs(1:1) =  
- Density_Variation_s(11:) =  
+ Density_Variation_Fs(1:1) = 0 
+ Density_Variation_s(1:1) = 0 
 / 
 &Neutral 
  Neutral_gas = 1 

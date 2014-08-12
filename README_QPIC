@@ -1,0 +1,58 @@
+----------------------------------------------------
+Instructions to run QUICKPIC on the Hoffman2 cluster
+----------------------------------------------------
+M. Litos
+Aug. 12, 2014
+
+
+----------------------------------------------------
+1) Make sure the current directory contains the 'qpic.e' executable
+file as well as the 'rpinput' file that you want to use.
+
+
+----------------------------------------------------
+2) Run 'openmpi.q' to access the MPI job builder user interface. Type
+'Build' to build your job.
+
+
+----------------------------------------------------
+3) Use the following answers to the MPI job builder...
+
+
+Name of the MPI program: qpic.e
+
+Memory request (MB): 4096
+
+[NOTE: Less than 4096 MB can cause the job to fail; more than 4096 can cause the job to queue forever. 4096 MB is the sweet spot.]
+
+Time limit (hours): 8
+
+Limit to group's cores?: y
+
+Name of data center: msa
+
+Number of tasks for job: 8
+
+Arguments for the program: [leave blank]
+
+Submit now?: n
+
+
+After going through the full questionaire, quit the MPI job builder
+tool by typing 'Quit'.
+
+----------------------------------------------------
+4) Once you've finished making your mpi job, there should be a file in
+the current directory called 'qpic.e.cmd' that you can use to submit
+your job to the cluster. Do so by entering the following command:
+
+qsub qpic.e.cmd
+
+
+----------------------------------------------------
+5) Check on the status of your job using the following command:
+
+qstat -u litos
+
+[NOTE: Use your own user name in place of 'litos'.]
+

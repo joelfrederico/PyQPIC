@@ -173,7 +173,7 @@ for i in range(0,nbeam):
  BEAM_PROFILE = 'test.hdf'  \n\
  QUIET_START = .true.  \n\
  Parameter_Array(1:1,1:3) = "+str(C_x[i])+","+str(C_y[i])+","+str(C_z[i])+" \n\
- Parameter_Array(2:2,1:3) = "+str(alpha_x0[i])+","+str(beta_x0[i])+","+str(alpha_y0[i])+","+str(beta_y0[i])+","+str(sig_z[i])+" \n\
+ Parameter_Array(2:2,1:5) = "+str(alpha_x0[i])+","+str(beta_x0[i])+","+str(alpha_y0[i])+","+str(beta_y0[i])+","+str(sig_z[i])+" \n\
  Parameter_Array(3:3,1:3) = "+str(en_x[i])+","+str(en_y[i])+","+str(dp[i])+" \n\
  Parameter_Array(4:4,1:3) = 0.,0.,0. \n\
  Parameter_Array(5:5,1:3) = 0.,0.,0. \n\
@@ -290,7 +290,7 @@ deckstr+=(\
  Density_Variation=."+str(dense_var)+". \n\
  Density_Variation_Nsec="+str(z_nstep)+" \n\
  Density_Variation_Fs(1:"+str(z_nstep)+") = "+' '.join(map(str,z_prof))+" \n\
- Density_Variation_s(1"+str(z_nstep)+":) = "+' '.join(map(str,z_step))+" \n\
+ Density_Variation_s(1:"+str(z_nstep)+") = "+' '.join(map(str,z_step))+" \n\
 / \n\
 &Neutral \n\
  Neutral_gas = "+str(Z_PLAS)+" \n\

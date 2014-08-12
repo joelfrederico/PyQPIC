@@ -62,7 +62,7 @@ is_multistep = False   # boolean
 #-------------------
 # Simulation Length
 #-------------------
-L_sim        =  5  # cm
+L_sim        =  90  # cm
 
 
 
@@ -216,7 +216,7 @@ sig_y.append( 30.        ) # um
 en_x.append ( 350.       ) # mm-mrad
 en_y.append ( 35.        ) # mm-mrad
 # bunch waist location from start
-waist.append( 15.        ) # cm
+waist.append( 0.         ) # cm
 # bunch energy spread
 # NOTE: Doesn't work! Set to '0'
 dp.append   ( 0.00       ) # (unitless)
@@ -255,7 +255,7 @@ sig_y.append( 10.        ) # um
 en_x.append ( 1.         ) # mm-mrad
 en_y.append ( 1.         ) # mm-mrad
 # bunch waist location from start
-waist.append( 15.        ) # cm
+waist.append( 0.         ) # cm
 # bunch energy spread
 # NOTE: Doesn't work! Set to '0'
 dp.append   ( 0.00       ) # (unitless)
