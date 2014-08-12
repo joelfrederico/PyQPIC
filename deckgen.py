@@ -275,8 +275,8 @@ elif (plasma_trans_geom=='circle'):
 # initialize longitudinal density parameters
 z_max   = 1
 z_nstep = 1
-z_step  = 1
-z_prof  = 1
+z_step  = []
+z_prof  = []
 # --------
 # define gaussian ramp function
 def gaussramps(A,z1,sig1,z2,sig2,z):    
@@ -294,7 +294,7 @@ elif (plasma_long_geom=='gauss'):
     z_max   = TEND*cwp*cm2um # um
     z_nstep = min(100,floor(TEND/DT))
     z_step  = linspace(0,z_max,z_nstep) # um
-    z_prof = gaussramps(1,flat_start,upramp_sig,
+    z_prof  = gaussramps(1,flat_start,upramp_sig,
               flat_end,dnramp_sig,z_step) # np
 
 #-------------------

@@ -57,7 +57,7 @@ box_width    = 0      # um
 #-------------------
 # Multi-Step Simulation?
 #-------------------
-is_multistep = True   # boolean
+is_multistep = False   # boolean
 
 #-------------------
 # Simulation Length
@@ -144,7 +144,7 @@ plasma_trans_geom = 'flat'
 #  'flat'  : constant density
 #  'gauss' : gaussian ramps
 # --------
-plasma_long_geom = 'gauss'
+plasma_long_geom = 'flat'
 
 # --------
 # longitudinal plasma params 
