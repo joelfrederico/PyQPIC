@@ -57,12 +57,12 @@ box_width    = 0      # um
 #-------------------
 # Multi-Step Simulation?
 #-------------------
-is_multistep = False   # boolean
+is_multistep = True   # boolean
 
 #-------------------
 # Simulation Length
 #-------------------
-L_sim        =  90  # cm
+L_sim        = 35.0   # cm
 
 
 
@@ -110,7 +110,7 @@ L_sim        =  90  # cm
 # Plasma Parameters
 #-------------------
 # (flat-top) plasma density
-np         = 5.0E16   # cm^-3
+np         = 3.0E16   # cm^-3
 # min plasma macro-particle density
 np_cell    = 4        # per cell
 # pre-formed/pre-ionized?
@@ -144,7 +144,7 @@ plasma_trans_geom = 'flat'
 #  'flat'  : constant density
 #  'gauss' : gaussian ramps
 # --------
-plasma_long_geom = 'flat'
+plasma_long_geom = 'gauss'
 
 # --------
 # longitudinal plasma params 
@@ -201,8 +201,8 @@ nbeam+=1
 sig_x_matched.append (False) # boolean
 sig_y_matched.append (False) # boolean
 # auto-match emittance to plasma?
-en_x_matched.append  (True) # boolean
-en_y_matched.append  (True) # boolean
+en_x_matched.append  (False) # boolean
+en_y_matched.append  (False) # boolean
 # relativistic gamma factor
 gam.append  ( 39823.87   ) # (unitless)
 # bunch charge
@@ -213,10 +213,10 @@ sig_z.append( 30.        ) # um
 sig_x.append( 30.        ) # um
 sig_y.append( 30.        ) # um
 # bunch noralized emittance
-en_x.append ( 350.       ) # mm-mrad
-en_y.append ( 35.        ) # mm-mrad
+en_x.append ( 100.       ) # mm-mrad
+en_y.append ( 10.        ) # mm-mrad
 # bunch waist location from start
-waist.append( 0.         ) # cm
+waist.append( 15.        ) # cm
 # bunch energy spread
 # NOTE: Doesn't work! Set to '0'
 dp.append   ( 0.00       ) # (unitless)
@@ -240,8 +240,8 @@ nbeam+=1
 sig_x_matched.append (False) # boolean
 sig_y_matched.append (False) # boolean
 # auto-match emittance to plasma?
-en_x_matched.append  (True) # boolean
-en_y_matched.append  (True) # boolean
+en_x_matched.append  (False) # boolean
+en_y_matched.append  (False) # boolean
 # relativistic gamma factor
 gam.append  ( 1000       ) # (unitless)
 # bunch charge
@@ -255,7 +255,7 @@ sig_y.append( 10.        ) # um
 en_x.append ( 1.         ) # mm-mrad
 en_y.append ( 1.         ) # mm-mrad
 # bunch waist location from start
-waist.append( 0.         ) # cm
+waist.append( 15.        ) # cm
 # bunch energy spread
 # NOTE: Doesn't work! Set to '0'
 dp.append   ( 0.00       ) # (unitless)
@@ -291,19 +291,19 @@ samp_plas_3D = False # boolean
 # z0: z=0, x-y plane
 #-------------------
 # E-field
-samp_E_x0     = False # boolean
+samp_E_x0     = True # boolean
 samp_E_y0     = True  # boolean
 samp_E_z0     = False # boolean
 # B-field
-samp_B_x0     = False # boolean
+samp_B_x0     = True # boolean
 samp_B_y0     = True  # boolean
 samp_B_z0     = False # boolean
 # Beam
-samp_beam_x0  = False # boolean
+samp_beam_x0  = True # boolean
 samp_beam_y0  = True  # boolean
 samp_beam_z0  = False # boolean
 # Plasma
-samp_plas_x0  = False # boolean
+samp_plas_x0  = True # boolean
 samp_plas_y0  = True  # boolean
 samp_plas_z0  = False # boolean
 # Beam Phase Space

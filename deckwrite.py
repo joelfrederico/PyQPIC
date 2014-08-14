@@ -178,7 +178,7 @@ for i in range(0,nbeam):
  Parameter_Array(4:4,1:3) = 0.,0.,0. \n\
  Parameter_Array(5:5,1:3) = 0.,0.,0. \n\
  Use_Shifter = .false.                           \n\
- Shifter_Nsec = 4   \n\
+ Shifter_Nsec = 1   \n\
  Shifter_Parameter(1:1,1:4) = 0.,0.,0.,0.  \n\
  Shifter_Parameter(2:2,1:4) = 0.,0.,0.,0. \n\
  Shifter_Parameter(3:3,1:4) = 0.,0.,0.0,0.0  \n\

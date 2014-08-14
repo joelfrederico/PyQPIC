@@ -109,8 +109,8 @@ for i in range(0,nbeam):
 # Initial beam parameters
 #-------------------
 for i in range(0,nbeam):
-    beta_x.append   ( pow(sig_x[i],2)/en_x[i] )
-    beta_y.append   ( pow(sig_y[i],2)/en_y[i] )
+    beta_x.append   ( pow(sig_x[i],2)/en_x[i]/gam[i] )
+    beta_y.append   ( pow(sig_y[i],2)/en_y[i]/gam[i] )
     beta_x0.append  ( beta_x[i] + pow(waist[i],2)/beta_x[i] )
     beta_y0.append  ( beta_y[i] + pow(waist[i],2)/beta_y[i] )
     alpha_x0.append ( waist[i]/beta_x[i] )
@@ -139,7 +139,7 @@ if (box_width>0):
 else:
     box_xy = int(round(                      \
              box_xy_fact*max(4.0*R_bub,      \
-             5.0*max(max(sig_x),max(sig_y))) \
+             7.0*max(max(sig_x0),max(sig_y0))) \
              /5.)*5)                         # um
 # ensure box_xy is odd:
 if not(box_xy%2):
@@ -163,10 +163,10 @@ d_grid   = d_grid_fact*cwp*cm2um             # um
 ind_xy   = int(max(round(log2(box_xy/d_grid)),6))
 ind_z    = int(max(round(log2(box_z/d_grid)),6))
 # limit number of cells in each dimension
-if (ind_xy>8):
-    ind_xy=8
-if (ind_z>9):
-    ind_z=9
+if (ind_xy>9):
+    ind_xy=9
+if (ind_z>8):
+    ind_z=8
 # ensure ind_z > ind_xy
 if (ind_z <= ind_xy):
     ind_z = int(ind_xy+1)
@@ -175,8 +175,8 @@ N_cell   = int(pow(2,ind_xy+ind_xy+ind_z))
 V_box    = box_xy*box_xy*box_z # um^3
 # beam particle density (power of 2)
 # default "safe" values->
-NP_xy    = int(pow(2,7))
-NP_z     = int(pow(2,8))
+NP_xy    = int(pow(2,8))
+NP_z     = int(pow(2,7))
 # dynamically assigned values->
 #NP_xy    = int(pow(2,ind_xy+NP_xy_fact))
 #NP_z     = int(pow(2,ind_z))
@@ -274,7 +274,7 @@ elif (plasma_trans_geom=='circle'):
 # --------
 # initialize longitudinal density parameters
 z_max   = 1
-z_nstep = 1
+z_nstep = int(1)
 z_step  = [0]
 z_prof  = [0]
 # --------
@@ -292,7 +292,7 @@ if   (plasma_long_geom=='flat'):
 elif (plasma_long_geom=='gauss'):
     dense_var = "true"
     z_max   = TEND*cwp*cm2um # um
-    z_nstep = min(100,floor(TEND/DT))
+    z_nstep = int(min(100,floor(TEND/DT)))
     z_step  = linspace(0,z_max,z_nstep) # um
     z_prof  = gaussramps(1,flat_start,upramp_sig,
               flat_end,dnramp_sig,z_step) # np
