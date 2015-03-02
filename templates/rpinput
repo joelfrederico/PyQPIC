@@ -9,7 +9,7 @@ Number of stages in the pipeline
 {% endif %}
 ------------------------------------------------------ 
 &Pipeline 
- Num_Stages =  {{ N_STAGES }}  
+ Num_Stages = {{ N_STAGES }}   
 / 
  
 --------------Simulation System----------------------- 
@@ -40,7 +40,7 @@ NBeams = number of beams
 {% endif %}
 ------------------------------------------------------ 
 &Num_Beams  
- NBeams = {{ nbeam }} 
+ NBeams = {{ nbeam }}  
 / 
  
 -------------Beam Parameters-------------------------- 
@@ -123,13 +123,13 @@ Destroyer_Criteria(3,:) = upper bound
  Charge = -1.0 
  Mass = 1.0 
  Gamma = {{ gam[i] }} 
- Num_Particle = {{ Q[i] }}
+ Num_Particle = {{ Q[i] }} 
  VDX = {{ v_x[i] }}, VDY = {{ v_y[i] }}, VDZ = {{ v_z[i] }} 
  Init_Routine =5 
  BEAM_PROFILE = 'test.hdf'  
  QUIET_START = .true.  
  Parameter_Array(1:1,1:3) = {{ C_x[i] }},{{ C_y[i] }},{{ C_z[i] }} 
- Parameter_Array(2:2,1:5) = {{ alpha_x0[i] }},{{ beta_x0[i] }},{{ alpha_y0[i] }},{{ beta_y0[i] }},{{ sig_z[i] }}
+ Parameter_Array(2:2,1:5) = {{ alpha_x0[i] }},{{ beta_x0[i] }},{{ alpha_y0[i] }},{{ beta_y0[i] }},{{ sig_z[i] }} 
  Parameter_Array(3:3,1:3) = {{ en_x[i] }},{{ en_y[i] }},{{ dp[i] }} 
  Parameter_Array(4:4,1:3) = 0.,0.,0. 
  Parameter_Array(5:5,1:3) = 0.,0.,0. 
@@ -161,9 +161,9 @@ Plasma_Density: density for normalization,
 {% endif %}
 ---------------------------------------------------- 
 &Plasma 
- Nspecies= {{ N_PREFORMED }}
- Nneutrals= {{ N_NEUTRAL }}
- Plasma_Density= {{ np }}
+ Nspecies= {{ N_PREFORMED }} 
+ Nneutrals= {{ N_NEUTRAL }} 
+ Plasma_Density= {{ np }} 
 / 
  
 ------------Plasma Parameters------------------------- 
@@ -213,7 +213,7 @@ Density_Variation_s: corresponding propagation distances (in
 ------------------------------------------------------ 
 &Species 
  LOAD_BALANCE_TH = -0.08 
- NP2 = {{ NP2 }} 
+ NP2 = {{ NP2 }}  
  Charge = -1.0 
  Mass = 1.0 
  VT2X=0.0, VT2Y=0.0 
@@ -227,9 +227,11 @@ Density_Variation_s: corresponding propagation distances (in
  Prof_Parameter(1,1:9) = 0.1,0.1,1,1,0.05,0.05,1,1,0 
  Prof_Parameter(2,1:9) = 0,20,20.1,40,40.1,60,60.1,90,95 
  Density_Variation=.{{ dense_var }}. 
- Density_Variation_Nsec={{ z_nstep }}
- Density_Variation_Fs(1:{{ z_nstep }}) = {% for val in z_prof %} {{ val }} {% endfor %}
- Density_Variation_s(1:{{ z_nstep }}) = {% for val in z_step %} {{ val }} {% endfor %}
+ Density_Variation_Nsec={{ z_nstep }} 
+ Density_Variation_Fs(1:{{ z_nstep }}) = {% for val in z_prof %}{{ val }} {% endfor %}
+
+ Density_Variation_s(1:{{ z_nstep }}) = {% for val in z_step %}{{ val }} {% endfor %}
+
 / 
 &Neutral 
  Neutral_gas = {{ Z_PLAS }} 
@@ -293,7 +295,7 @@ direction for beam centroid calculation.
  DFE=0,  
  DFESLICE= {{ DFE }}, EX0= {{ EX0 }}, EY0= {{ EY0 }}, EZ0= {{ EZ0 }} 
  DFB=0,  
- DFBSLICE= {{ DFB }}, BX0= {{ BX0 }}, BY0= {{ BY0 }}, BZ0= {{ BZ0 }}
+ DFBSLICE= {{ DFB }}, BX0= {{ BX0 }}, BY0= {{ BY0 }}, BZ0= {{ BZ0 }} 
 / 
  
 &Beam_Diag 
@@ -304,7 +306,7 @@ direction for beam centroid calculation.
  
 &Plasma_Diag 
  DFQEP=0,  
- DFQEPSLICE= {{ DFQEP }}, QEPX0= {{ QEPX0 }}, QEPY0= {{ QEPY0 }},  QEPZ0= {{ QEPZ0 }} 
+ DFQEPSLICE= {{ DFQEP }} , QEPX0= {{ QEPX0 }}, QEPY0= {{ QEPY0 }},  QEPZ0= {{ QEPZ0 }} 
 / 
  
 ------------ Diagnostic ------------------------------ 
@@ -334,7 +336,7 @@ is the dumping frequency
 {% endif %}
 ------------------------------------------------------ 
 &Restart_File 
- READ_RST_FILE = .{{ READ_RST }}., RST_TIMESTEP = {{ RST_START }} 
+ READ_RST_FILE = .{{ READ_RST }}., RST_TIMESTEP = {{ RST_START }}  
  DUMP_RST_FILE = .{{ DUMP_RST }}.,  DFRST= {{ DRST_STEP }} 
 / 
  

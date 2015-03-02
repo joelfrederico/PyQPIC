@@ -500,7 +500,7 @@ stream = template.stream(
         plas_p2         = plas_p2,
         plas_p3         = plas_p3,
         dense_var       = dense_var,
-        z_nstep         = z_nstep, z_prof=z_prof,
+        z_nstep         = z_nstep, z_prof=z_prof, z_step=z_step,
         Z_PLAS          = Z_PLAS,
         MAX_ION         = MAX_ION,
         TEND            = TEND, DT = DT,
