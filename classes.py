@@ -1,6 +1,7 @@
 import numpy as _np
 # import ipdb
 from . import const as ct
+import ipdb
 
 
 def _set_if_none(self, mainkwargs, params):
@@ -46,8 +47,9 @@ class BeamPositioning(object):
             off=bunch.off_y
             )
 
-    def C_z(self, bunch):
-        C_z = 4.0 * bunch.sig_z + bunch.off_z  # um
+    def C_z(self, bunches, bunch):
+        C_z = 4.0 * bunches[0].sig_z + bunch.off_z  # um
+        ipdb.set_trace()
         return C_z
 
 
@@ -584,7 +586,7 @@ class PlasmaSettings(object):
 class QuickPICSettings(object):
     def __init__(self,
             restart      = False,
-            dump_restart = False,
+            dump_restart = True,
             RST_START    = 1200,
             DRST_STEP    = 100,
             TOT_PROC     = 128,
