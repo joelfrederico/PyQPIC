@@ -1,6 +1,6 @@
 import numpy as _np
 # import ipdb
-import const as ct
+from . import const as ct
 
 
 def _set_if_none(self, mainkwargs, params):
@@ -143,10 +143,12 @@ class BoxSettings(object):
     def __init__(self,
             box_width  = None,
             box_height = None,
+            box_length = None,
             NP_dynamic = False
             ):
         self.box_width  = box_width
         self.box_height = box_height
+        self.box_length = box_length
         self.NP_dynamic = NP_dynamic
 
     # ===============================
@@ -167,7 +169,7 @@ class BoxSettings(object):
                     bunch.sig_y0(plasma))
 
             box_xy = int(round(
-                magic.box_xy_fact * max(4.0 * plasma.R_bub,
+                magic.box_xy_fact * max(4.0 * plasma.R_bub(bunches[0]),
                     7.0 * max_sig)
                     / 5.) * 5)                         # um
         # ensure box_xy is odd:
@@ -185,7 +187,7 @@ class BoxSettings(object):
         else:
             max_sig_z = 0
             for bunch in bunches:
-                max_sig_z = max(max_sig_z, bunch.sig_z(plasma))
+                max_sig_z = max(max_sig_z, bunch.sig_z)
 
             box_z = int(round(
                 magic.box_z_fact * max(2.5 * plasma.L_bub,
@@ -237,7 +239,6 @@ class BoxSettings(object):
                             magic   = magic)
                         / self.d_grid(
                             plasma  = plasma,
-                            bunches = bunches,
                             magic   = magic)
                         )
                     ),
@@ -330,8 +331,10 @@ class BoxSettings(object):
 
 class PlasmaSettings(object):
     def __init__(self,
+            bunches,
+            magic,
             qpic,
-            n         = 3.0e16,  # cm^-3
+            np         = 3.0e16,  # cm^-3
             np_cell   = 4,       # per cell
             preformed = True,    # boolean
             # plasma spiecies atomic number
@@ -378,7 +381,7 @@ class PlasmaSettings(object):
             # downramp length (sigma)
             dnramp_sig  = 15.0E4   # um
             ):
-        self.n           = n
+        self.np          = np
         self.np_cell     = np_cell
         self.preformed   = preformed
         self.plasma_z    = 1
@@ -396,14 +399,12 @@ class PlasmaSettings(object):
         self.flat_end   = flat_end,
         self.dnramp_sig = dnramp_sig,
 
-        self.set_plasma_long_geom(
-            plasma_long_geom = plasma_long_geom,
-            qpic              = qpic)
+        self.set_plasma_long_geom(plasma_long_geom, bunches, magic, qpic)
 
     @property
     def wp(self):
         # plasma frequency
-        wp     = (5.64E4) * _np.sqrt(self.n)  # rad/s
+        wp     = (5.64E4) * _np.sqrt(self.np)  # rad/s
         return wp
     
     @property
@@ -420,7 +421,7 @@ class PlasmaSettings(object):
 
     def R_bub(self, drive_bunch):
         # max bubble radius
-        R_bub    = 2.58 * _np.sqrt((drive_bunch.Lambda / (ct.qe * ct.c)) * (1 / self.n)) * ct.cm2um  # um
+        R_bub    = 2.58 * _np.sqrt((drive_bunch.Lambda / (ct.qe * ct.c)) * (1 / self.np)) * ct.cm2um  # um
         return R_bub
 
     @property
@@ -527,7 +528,7 @@ class PlasmaSettings(object):
     def plasma_long_geom(self):
         return self._plasma_long_geom
 
-    def set_plasma_long_geom(self, plasma_long_geom, qpic, plasma):
+    def set_plasma_long_geom(self, plasma_long_geom, bunches, magic, qpic):
         self._plasma_long_geom = plasma_long_geom
         # longitudinal density profile
         # --------
@@ -541,21 +542,27 @@ class PlasmaSettings(object):
         # define gaussian ramp function
         def gaussramps(A, z1, sig1, z2, sig2, z):
             return A * (
-                (z < z1) * _np.exp(-pow(z - z1, 2) / (2 * pow(sig1, 2))) +
+                (z < z1) * _np.exp(-_np.power(z - z1, 2) / (2 * _np.power(sig1, 2))) +
                 (z >= z1) * (z <= z2) +
-                (z > z2) * _np.exp(-pow(z - z2, 2) / (2 * pow(sig2, 2))))
+                (z > z2) * _np.exp(-_np.power(z - z2, 2) / (2 * _np.power(sig2, 2))))
         # --------
         # flat longitudinal profile
         if (plasma_long_geom == 'flat'):
             self._dense_var = "false"
         # gaussian ramps profile
         elif (plasma_long_geom == 'gauss'):
+            TEND = qpic.TEND(bunches[0], self, magic)
+            DT = qpic.DT(bunches[0], magic)
             self._dense_var = "true"
-            self._z_max   = qpic.TEND * plasma.cwp * ct.cm2um  # um
-            self._z_nstep = int(min(100, _np.floor(qpic.TEND / qpic.DT)))
+            self._z_max   = TEND * self.cwp * ct.cm2um  # um
+            self._z_nstep = int(min(100, _np.floor(TEND / DT)))
             self._z_step  = _np.linspace(0, self._z_max, self._z_nstep)  # um
             self._z_prof  = gaussramps(1, self.flat_start, self.upramp_sig,
                       self.flat_end, self.dnramp_sig, self._z_step)  # np
+
+    @property
+    def dense_var(self):
+        return self._dense_var
 
     @property
     def z_max(self):
@@ -577,10 +584,10 @@ class PlasmaSettings(object):
 class QuickPICSettings(object):
     def __init__(self,
             restart      = False,
+            dump_restart = False,
             RST_START    = 1200,
             DRST_STEP    = 100,
             TOT_PROC     = 128,
-            dump_restart = False,
             verbose      = False,
             is_multistep = True,
             L_sim        = 35.0,    # cm
@@ -653,16 +660,8 @@ class QuickPICSettings(object):
             ):
         # read the restart file
         # if this is a restart run
-        if restart:
-            self.READ_RST = "true"
-        else:
-            self.READ_RST = "false"
-
-        # dump restart files
-        if dump_restart:
-            self.DUMP_RST = "true"
-        else:
-            self.DUMP_RST = "false"
+        self.restart = restart
+        self.dump_restart = dump_restart
 
         self.RST_START = RST_START
         self.DRST_STEP = DRST_STEP
@@ -672,33 +671,52 @@ class QuickPICSettings(object):
 
         self.is_multistep     = is_multistep
 
-        self.samp_E_3D        = samp_E_3D,
-        self.samp_B_3D        = samp_B_3D,
-        self.samp_beam_3D     = samp_beam_3D,
-        self.samp_plas_3D     = samp_plas_3D,
-        self.samp_E_x0        = samp_E_x0,
-        self.samp_E_y0        = samp_E_y0,
-        self.samp_E_z0        = samp_E_z0,
-        self.samp_B_x0        = samp_B_x0,
-        self.samp_B_y0        = samp_B_y0,
-        self.samp_B_z0        = samp_B_z0,
-        self.samp_beam_x0     = samp_beam_x0,
-        self.samp_beam_y0     = samp_beam_y0,
-        self.samp_beam_z0     = samp_beam_z0,
-        self.samp_plas_x0     = samp_plas_x0,
-        self.samp_plas_y0     = samp_plas_y0,
-        self.samp_plas_z0     = samp_plas_z0,
-        self.samp_beam_pha    = samp_beam_pha,
-        self.samp_plas_pha    = samp_plas_pha,
-        self.samp_E_dt        = samp_E_dt,
-        self.samp_B_dt        = samp_B_dt,
-        self.samp_beam_dt     = samp_beam_dt,
-        self.samp_plas_dt     = samp_plas_dt,
-        self.samp_beam_pha_dt = samp_beam_pha_dt,
-        self.samp_plas_pha_dt = samp_plas_pha_dt,
-        self.samp_beam_pha_N  = samp_beam_pha_N,
-        self.samp_plas_pha_N  = samp_plas_pha_N,
-        self.beam_cent_res_dz = beam_cent_res_dz,
+        self.L_sim            = L_sim
+
+        self.samp_E_3D        = samp_E_3D
+        self.samp_B_3D        = samp_B_3D
+        self.samp_beam_3D     = samp_beam_3D
+        self.samp_plas_3D     = samp_plas_3D
+        self.samp_E_x0        = samp_E_x0
+        self.samp_E_y0        = samp_E_y0
+        self.samp_E_z0        = samp_E_z0
+        self.samp_B_x0        = samp_B_x0
+        self.samp_B_y0        = samp_B_y0
+        self.samp_B_z0        = samp_B_z0
+        self.samp_beam_x0     = samp_beam_x0
+        self.samp_beam_y0     = samp_beam_y0
+        self.samp_beam_z0     = samp_beam_z0
+        self.samp_plas_x0     = samp_plas_x0
+        self.samp_plas_y0     = samp_plas_y0
+        self.samp_plas_z0     = samp_plas_z0
+        self.samp_beam_pha    = samp_beam_pha
+        self.samp_plas_pha    = samp_plas_pha
+        self.samp_E_dt        = samp_E_dt
+        self.samp_B_dt        = samp_B_dt
+        self.samp_beam_dt     = samp_beam_dt
+        self.samp_plas_dt     = samp_plas_dt
+        self.samp_beam_pha_dt = samp_beam_pha_dt
+        self.samp_plas_pha_dt = samp_plas_pha_dt
+        self.samp_beam_pha_N  = samp_beam_pha_N
+        self.samp_plas_pha_N  = samp_plas_pha_N
+        self.beam_cent_res_dz = beam_cent_res_dz
+
+    @property
+    def READ_RST(self):
+        if self.restart:
+            READ_RST = "true"
+        else:
+            READ_RST = "false"
+        return READ_RST
+
+    @property
+    def DUMP_RST(self):
+        # dump restart files
+        if self.dump_restart:
+            DUMP_RST = "true"
+        else:
+            DUMP_RST = "false"
+        return DUMP_RST
 
     # -------------------
     # Beam Evolution
@@ -798,7 +816,6 @@ class QuickPICSettings(object):
     # -------------------
 
     # E-field sampling plane(s)
-    @property
     def EX0(self, box, plasma, bunches, magic):
         if self.samp_E_x0:
             box_xy = box.box_xy(plasma=plasma, bunches=bunches, magic=magic)
@@ -807,7 +824,6 @@ class QuickPICSettings(object):
             EX0  = 0.         # none
         return EX0
 
-    @property
     def EY0(self, box, plasma, bunches, magic):
         if self.samp_E_y0:
             box_xy = box.box_xy(plasma=plasma, bunches=bunches, magic=magic)
@@ -816,7 +832,6 @@ class QuickPICSettings(object):
             EY0  = 0.         # none
         return EY0
 
-    @property
     def EZ0(self, box, plasma, bunches, magic):
         if self.samp_E_z0:
             box_z = box.box_z(plasma=plasma, bunches=bunches, magic=magic)
@@ -826,7 +841,6 @@ class QuickPICSettings(object):
         return EZ0
     # B-field sampling plane(s)
 
-    @property
     def BX0(self, box, plasma, bunches, magic):
         if self.samp_B_x0:
             box_xy = box.box_xy(plasma=plasma, bunches=bunches, magic=magic)
@@ -835,7 +849,6 @@ class QuickPICSettings(object):
             BX0  = 0.         # none
         return BX0
 
-    @property
     def BY0(self, box, plasma, bunches, magic):
         if self.samp_B_y0:
             box_xy = box.box_xy(plasma=plasma, bunches=bunches, magic=magic)
@@ -844,7 +857,6 @@ class QuickPICSettings(object):
             BY0  = 0.         # none
         return BY0
 
-    @property
     def BZ0(self, box, plasma, bunches, magic):
         if self.samp_B_z0:
             box_z = box.box_z(plasma=plasma, bunches=bunches, magic=magic)
@@ -854,7 +866,6 @@ class QuickPICSettings(object):
         return BZ0
     # Beam sampling plane(s)
 
-    @property
     def QEBX0(self, box, plasma, bunches, magic):
         if self.samp_beam_x0:
             box_xy = box.box_xy(plasma=plasma, bunches=bunches, magic=magic)
@@ -863,7 +874,6 @@ class QuickPICSettings(object):
             QEBX0 = 0.        # none
         return QEBX0
 
-    @property
     def QEBY0(self, box, plasma, bunches, magic):
         if self.samp_beam_y0:
             box_xy = box.box_xy(plasma=plasma, bunches=bunches, magic=magic)
@@ -872,7 +882,6 @@ class QuickPICSettings(object):
             QEBY0 = 0.        # none
         return QEBY0
 
-    @property
     def QEBZ0(self, box, plasma, bunches, magic):
         if self.samp_beam_z0:
             box_z = box.box_z(plasma=plasma, bunches=bunches, magic=magic)
@@ -882,7 +891,6 @@ class QuickPICSettings(object):
         return QEBZ0
 
     # Plasma sampling plane(s)
-    @property
     def QEPX0(self, box, plasma, bunches, magic):
         if self.samp_plas_x0:
             box_xy = box.box_xy(plasma=plasma, bunches=bunches, magic=magic)
@@ -891,7 +899,6 @@ class QuickPICSettings(object):
             QEPX0 = 0.        # none
         return QEPX0
 
-    @property
     def QEPY0(self, box, plasma, bunches, magic):
         if self.samp_plas_y0:
             box_xy = box.box_xy(plasma=plasma, bunches=bunches, magic=magic)
@@ -900,7 +907,6 @@ class QuickPICSettings(object):
             QEPY0 = 0.        # none
         return QEPY0
 
-    @property
     def QEPZ0(self, box, plasma, bunches, magic):
         if self.samp_plas_z0:
             box_z = box.box_z(plasma=plasma, bunches=bunches, magic=magic)
@@ -922,6 +928,7 @@ class QuickPICSettings(object):
             DFE      = int(1)        # DT
         return DFE
 
+    @property
     def DFB(self):
         if self.is_multistep:
             # B-field
@@ -931,6 +938,7 @@ class QuickPICSettings(object):
             # Beam
         return DFB
 
+    @property
     def DFQEB(self):
         if self.is_multistep:
             # Beam
@@ -940,6 +948,7 @@ class QuickPICSettings(object):
             DFQEB    = int(1)        # DT
         return DFQEB
 
+    @property
     def DFQEP(self):
         if self.is_multistep:
             # Plasma
@@ -1014,7 +1023,7 @@ class QuickPICSettings(object):
 
 
 class BunchSettings(object):
-    def __init__(self, beamtype=None, **kwargs
+    def __init__(self, beamtype='drive', **kwargs
             ):
         if beamtype == 'drive':
             params = {
@@ -1036,7 +1045,7 @@ class BunchSettings(object):
                 # Bunch length
                 'sig_x_unmatched': 30.                      ,  # um
                 'sig_y_unmatched': 30.                      ,  # um
-                'sig_z_unmatched': 30.                      ,  # um
+                'sig_z': 30.                      ,  # um
 
                 # Bunch normalized emittance
                 'en_x_unmatched': 100.                      ,  # mm-mrad
@@ -1079,7 +1088,7 @@ class BunchSettings(object):
                 # Bunch length
                 'sig_x_unmatched': 10.                      ,  # um
                 'sig_y_unmatched': 10.                      ,  # um
-                'sig_z_unmatched': 10.                      ,  # um
+                'sig_z': 10.                      ,  # um
 
                 # Bunch normalized emittance
                 'en_x_unmatched': 1.                        ,  # mm-mrad
@@ -1116,15 +1125,15 @@ class BunchSettings(object):
     # ===============================
     # Auto-Matching to Plasma
     # ===============================
-    def _sig(self, sig_matched, en, plasma, _sig):
+    def _sig(self, sig_matched, en, plasma, sig_unmatched):
         if sig_matched:
             sig = _np.sqrt(en * (ct.cm2um / plasma.kp) * _np.sqrt(2 / self.gamma))
         else:
-            sig = _sig
+            sig = sig_unmatched
         return sig
 
     def sig_x(self, plasma):
-        return self._sig(self,
+        return self._sig(
             sig_matched   = self.sig_x_matched,
             sig_unmatched = self.sig_x_unmatched,
             en            = self.en_x_unmatched,
@@ -1139,11 +1148,11 @@ class BunchSettings(object):
             plasma        = plasma
             )
 
-    def _en(self, en_matched, _en, sig, plasma):
+    def _en(self, en_matched, en_unmatched, sig, plasma):
         if en_matched:
             en = pow(sig, 2.0) * (plasma.kp / ct.cm2um) * _np.sqrt(self.gamma / 2.0)
         else:
-            en = _en
+            en = en_unmatched
         return en
 
     def en_x(self, plasma):

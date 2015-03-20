@@ -1,3 +1,7 @@
+{% set box_xy = box.box_xy(plasma=plasma, bunches=bunches, magic=magic) %}
+{% set box_z  = box.box_z(plasma=plasma, bunches=bunches, magic=magic) %}
+{% set ind_xy = box.ind_xy(plasma=plasma, bunches=bunches, magic=magic) %}
+{% set ind_z  = box.ind_z(plasma=plasma, bunches=bunches, magic=magic) %}
 ---------------QuickPIC Input------------------------- 
 &Input_File 
  Version = 032011  
@@ -9,7 +13,7 @@ Number of stages in the pipeline
 {% endif %}
 ------------------------------------------------------ 
 &Pipeline 
- Num_Stages = {{ N_STAGES }}   
+ Num_Stages = {{ qpic.N_STAGES(box, plasma, bunches, magic) }}   
 / 
  
 --------------Simulation System----------------------- 
@@ -115,22 +119,33 @@ Destroyer_Criteria(3,:) = upper bound
    inbound particles will be destroyed! 
 {% endif %}
 ------------------------------------------------------ 
-{% for i in range(0,nbeam) %}
+{% set NP_xy = box.NP_xy(plasma=plasma, bunches=bunches, magic=magic) %}
+{% set NP_z = box.NP_z(plasma=plasma, bunches=bunches, magic=magic) %}
+{% for bunch in bunches %}
 &Beam 
- BEAM_EVOLUTION = .{{ BEAM_EVO }}. 
+ BEAM_EVOLUTION = .{{ qpic.BEAM_EVO }}. 
  MIN_BEAM_PARTICLE = 5000000  
  NPX = {{ NP_xy }}, NPY = {{ NP_xy }}, NPZ = {{ NP_z }} 
  Charge = -1.0 
  Mass = 1.0 
- Gamma = {{ gam[i] }} 
- Num_Particle = {{ Q[i] }} 
- VDX = {{ v_x[i] }}, VDY = {{ v_y[i] }}, VDZ = {{ v_z[i] }} 
+ Gamma = {{ bunch.gamma }} 
+ Num_Particle = {{ bunch.Q }} 
+ VDX = {{ bunch.v_x }}, VDY = {{ bunch.v_y }}, VDZ = {{ bunch.v_z }} 
  Init_Routine =5 
  BEAM_PROFILE = 'test.hdf'  
  QUIET_START = .true.  
- Parameter_Array(1:1,1:3) = {{ C_x[i] }},{{ C_y[i] }},{{ C_z[i] }} 
- Parameter_Array(2:2,1:5) = {{ alpha_x0[i] }},{{ beta_x0[i] }},{{ alpha_y0[i] }},{{ beta_y0[i] }},{{ sig_z[i] }} 
- Parameter_Array(3:3,1:3) = {{ en_x[i] }},{{ en_y[i] }},{{ dp[i] }} 
+{% set C_x = beampos.C_x(box=box, plasma=plasma, bunches=bunches, bunch=bunch, magic=magic) %}
+{% set C_y = beampos.C_y(box=box, plasma=plasma, bunches=bunches, bunch=bunch, magic=magic) %}
+{% set C_z = beampos.C_z(bunch=bunch) %}
+ Parameter_Array(1:1,1:3) = {{ C_x }},{{ C_y }},{{ C_z }} 
+{% set alpha_x0 = bunch.alpha_x0(plasma=plasma) %}
+{% set alpha_y0 = bunch.alpha_y0(plasma=plasma) %}
+{% set beta_x0 = bunch.beta_x0(plasma=plasma) %}
+{% set beta_y0 = bunch.beta_y0(plasma=plasma) %}
+ Parameter_Array(2:2,1:5) = {{ alpha_x0 }},{{ beta_x0 }},{{ alpha_y0 }},{{ beta_y0 }},{{ bunch.sig_z }} 
+{% set en_x = bunch.en_x(plasma=plasma) %}
+{% set en_y = bunch.en_y(plasma=plasma) %}
+ Parameter_Array(3:3,1:3) = {{ en_x }},{{ en_y }},{{ bunch.dp }} 
  Parameter_Array(4:4,1:3) = 0.,0.,0. 
  Parameter_Array(5:5,1:3) = 0.,0.,0. 
  Use_Shifter = .false.                           
@@ -161,9 +176,9 @@ Plasma_Density: density for normalization,
 {% endif %}
 ---------------------------------------------------- 
 &Plasma 
- Nspecies= {{ N_PREFORMED }} 
- Nneutrals= {{ N_NEUTRAL }} 
- Plasma_Density= {{ np }} 
+ Nspecies= {{ plasma.N_PREFORMED }} 
+ Nneutrals= {{ plasma.N_NEUTRAL }} 
+ Plasma_Density= {{ plasma.np }} 
 / 
  
 ------------Plasma Parameters------------------------- 
@@ -213,29 +228,29 @@ Density_Variation_s: corresponding propagation distances (in
 ------------------------------------------------------ 
 &Species 
  LOAD_BALANCE_TH = -0.08 
- NP2 = {{ NP2 }}  
+ NP2 = {{ box.NP2(plasma=plasma, bunches=bunches, magic=magic) }}  
  Charge = -1.0 
  Mass = 1.0 
  VT2X=0.0, VT2Y=0.0 
  Non_Neutral_Factor = 1.0  
- Profile_type = {{ plas_prof }} 
- argx1 = {{ plas_p1 }} 
- argx2 = {{ plas_p2 }} 
- argx3 = {{ plas_p3 }} 
+ Profile_type = {{ plasma.plas_prof }} 
+ argx1 = {{ plasma.plas_p1 }} 
+ argx2 = {{ plasma.plas_p2 }} 
+ argx3 = {{ plasma.plas_p3 }} 
  nsrand = 0  
  Prof_Nsec = 9  
  Prof_Parameter(1,1:9) = 0.1,0.1,1,1,0.05,0.05,1,1,0 
  Prof_Parameter(2,1:9) = 0,20,20.1,40,40.1,60,60.1,90,95 
- Density_Variation=.{{ dense_var }}. 
- Density_Variation_Nsec={{ z_nstep }} 
- Density_Variation_Fs(1:{{ z_nstep }}) = {% for val in z_prof %}{{ val }} {% endfor %}
+ Density_Variation=.{{ plasma.dense_var }}. 
+ Density_Variation_Nsec={{ plasma.z_nstep }} 
+ Density_Variation_Fs(1:{{ plasma.z_nstep }}) = {% for val in plasma.z_prof %}{{ val }} {% endfor %}
 
- Density_Variation_s(1:{{ z_nstep }}) = {% for val in z_step %}{{ val }} {% endfor %}
+ Density_Variation_s(1:{{ plasma.z_nstep }}) = {% for val in plasma.z_step %}{{ val }} {% endfor %}
 
 / 
 &Neutral 
- Neutral_gas = {{ Z_PLAS }} 
- Neutral_z = {{ MAX_ION }} 
+ Neutral_gas = {{ plasma.Z_PLAS }} 
+ Neutral_z = {{ plasma.MAX_ION }} 
 / 
  
 ------------Simulation time--------------------------- 
@@ -245,7 +260,7 @@ In unit of 1/Omega_p.
 {% endif %}
 ------------------------------------------------------ 
 &Simulation_time 
- TEND = {{ TEND }}, DT = {{ DT }} 
+ TEND = {{ qpic.TEND(drive_bunch=bunches[0], plasma=plasma, magic=magic) }}, DT = {{ qpic.DT(drive_bunch=bunches[0], magic=magic) }} 
 /  
  
 ------------ Diagnostic ------------------------------ 
@@ -293,20 +308,32 @@ direction for beam centroid calculation.
  
 &Field_Diag 
  DFE=0,  
- DFESLICE= {{ DFE }}, EX0= {{ EX0 }}, EY0= {{ EY0 }}, EZ0= {{ EZ0 }} 
+{% set EX0 = qpic.EX0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+{% set EY0 = qpic.EY0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+{% set EZ0 = qpic.EZ0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+ DFESLICE= {{ qpic.DFE }}, EX0= {{ EX0 }}, EY0= {{ EY0 }}, EZ0= {{ EZ0 }} 
  DFB=0,  
- DFBSLICE= {{ DFB }}, BX0= {{ BX0 }}, BY0= {{ BY0 }}, BZ0= {{ BZ0 }} 
+{% set BX0 = qpic.BX0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+{% set BY0 = qpic.BY0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+{% set BZ0 = qpic.BZ0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+ DFBSLICE= {{ qpic.DFB }}, BX0= {{ BX0 }}, BY0= {{ BY0 }}, BZ0= {{ BZ0 }} 
 / 
  
 &Beam_Diag 
  DFQEB=0,  
- DFQEBSLICE= {{ DFQEB }} , QEBX0= {{ QEBX0 }}, QEBY0= {{ QEBY0 }},  QEBZ0= {{ QEBZ0 }}, 
- DFBC=0, BC_DIAG_RES= {{ BC_RES }} 
+{% set QEBX0 = qpic.QEBX0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+{% set QEBY0 = qpic.QEBY0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+{% set QEBZ0 = qpic.QEBZ0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+ DFQEBSLICE= {{ qpic.DFQEB }} , QEBX0= {{ QEBX0 }}, QEBY0= {{ QEBY0 }},  QEBZ0= {{ QEBZ0 }}, 
+ DFBC=0, BC_DIAG_RES= {{ qpic.BC_RES }} 
 / 
  
 &Plasma_Diag 
  DFQEP=0,  
- DFQEPSLICE= {{ DFQEP }} , QEPX0= {{ QEPX0 }}, QEPY0= {{ QEPY0 }},  QEPZ0= {{ QEPZ0 }} 
+{% set QEPX0 = qpic.QEPX0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+{% set QEPY0 = qpic.QEPY0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+{% set QEPZ0 = qpic.QEPZ0(box=box, plasma=plasma, bunches=bunches, magic=magic) %}
+ DFQEPSLICE= {{ qpic.DFQEP }} , QEPX0= {{ QEPX0 }}, QEPY0= {{ QEPY0 }},  QEPZ0= {{ QEPZ0 }} 
 / 
  
 ------------ Diagnostic ------------------------------ 
@@ -318,13 +345,13 @@ direction for beam centroid calculation.
 {% endif %}
 ------------------------------------------------------ 
 &Beam_Phase_Space_Diag 
- DUMP_PHA_BEAM=.{{ DUMP_PHA_BEAM }}., DFPHA_BEAM= {{ DFPHA_BEAM }},  
- DSAMPLE_BEAM = {{ DSAMPLE_BEAM }} 
+ DUMP_PHA_BEAM=.{{ qpic.DUMP_PHA_BEAM }}., DFPHA_BEAM= {{ qpic.DFPHA_BEAM }},  
+ DSAMPLE_BEAM = {{ qpic.DSAMPLE_BEAM(phas_samp, box, plasma, bunches, magic) }} 
 / 
  
 &Plasma_Phase_Space_Diag 
- DUMP_PHA_PLASMA = .{{ DUMP_PHA_PLASMA }}., DFPHA_PLASMA = {{ DFPHA_PLASMA }}, 
- DSAMPLE_PLASMA = {{ DSAMPLE_PLASMA }} 
+ DUMP_PHA_PLASMA = .{{ qpic.DUMP_PHA_PLASMA }}., DFPHA_PLASMA = {{ qpic.DFPHA_PLASMA }}, 
+ DSAMPLE_PLASMA = {{ qpic.DSAMPLE_PLASMA(phas_samp, box, plasma, bunches, magic) }} 
 / 
  
 ------------ Restart file ---------------------------- 
@@ -336,8 +363,8 @@ is the dumping frequency
 {% endif %}
 ------------------------------------------------------ 
 &Restart_File 
- READ_RST_FILE = .{{ READ_RST }}., RST_TIMESTEP = {{ RST_START }}  
- DUMP_RST_FILE = .{{ DUMP_RST }}.,  DFRST= {{ DRST_STEP }} 
+ READ_RST_FILE = .{{ qpic.READ_RST }}., RST_TIMESTEP = {{ qpic.RST_START }}  
+ DUMP_RST_FILE = .{{ qpic.DUMP_RST }}.,  DFRST= {{ qpic.DRST_STEP }} 
 / 
  
 ------------Optimization Coefficents---------------- 
@@ -357,5 +384,5 @@ Debug options
 ------------------------------------------------------ 
 &debug 
  MAX_ITER = 2, FAC_EXY = 1., FAC_BXY = 1., FAC_AZ = 1,  
- FAC_BZ = 1, C_DIF = 1 , J_DIF = 1, VERBOSE = {{ VERBOSE }}  
+ FAC_BZ = 1, C_DIF = 1 , J_DIF = 1, VERBOSE = {{ qpic.VERBOSE }}  
 / 

@@ -1,4 +1,4 @@
-# import numpy as _np
+import numpy as _np
 # =====================
 # Fundamental Constants
 # =====================
