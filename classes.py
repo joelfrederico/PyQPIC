@@ -1,7 +1,6 @@
 import numpy as _np
 # import ipdb
 from . import const as ct
-import ipdb
 
 
 def _set_if_none(self, mainkwargs, params):
@@ -49,7 +48,6 @@ class BeamPositioning(object):
 
     def C_z(self, bunches, bunch):
         C_z = 4.0 * bunches[0].sig_z + bunch.off_z  # um
-        ipdb.set_trace()
         return C_z
 
 
