@@ -30,12 +30,12 @@ class Beam(object):
             return self._x
 
     @property
-    def y(self):
+    def xp(self):
         try:
             return self._xp
         except AttributeError:
             self._xp = self._h5.p1.value
-            return self._x
+            return self._xp
 
     @property
     def y(self):
@@ -51,7 +51,7 @@ class Beam(object):
             return self._yp
         except AttributeError:
             self._yp = self._h5.p2.value
-            return self._y
+            return self._yp
         
     @property
     def z(self):

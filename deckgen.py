@@ -40,7 +40,6 @@ def deckgen(
     # Use jinja template object to create
     # a stream with substitutions in it
     # =====================================
-
     stream = template.stream(
         qpic              = qpic,
         magic             = magic,

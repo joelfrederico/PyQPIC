@@ -1043,9 +1043,9 @@ class BunchSettings(object):
                 'Q': int(2.0e10)                  ,  # e
 
                 # Bunch length
-                'sig_x_unmatched': 30.                      ,  # um
-                'sig_y_unmatched': 30.                      ,  # um
-                'sig_z': 30.                      ,  # um
+                'sig_x_unmatched': 30.0e-6        ,  # um
+                'sig_y_unmatched': 30.0e-6        ,  # um
+                'sig_z': 30.0e-6                  ,  # um
 
                 # Bunch normalized emittance
                 'en_x_unmatched': 100.                      ,  # mm-mrad
@@ -1086,16 +1086,16 @@ class BunchSettings(object):
                 'Q': int(1.0e9)                   ,  # e
 
                 # Bunch length
-                'sig_x_unmatched': 10.                      ,  # um
-                'sig_y_unmatched': 10.                      ,  # um
-                'sig_z': 10.                      ,  # um
+                'sig_x_unmatched': 10.0e-6                      ,  # um
+                'sig_y_unmatched': 10.0e-6                      ,  # um
+                'sig_z': 10.0e-6                      ,  # um
 
                 # Bunch normalized emittance
                 'en_x_unmatched': 1.                        ,  # mm-mrad
                 'en_y_unmatched': 1.                        ,  # mm-mrad
 
                 # Bunch waist location from start
-                'waist': 15.                      ,  # cm
+                'waist': 15.0e-2                      ,  # cm
 
                 # Bunch energy spread
                 # DOESN'T WORK                    ,  SET TO 0
