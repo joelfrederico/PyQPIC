@@ -9,32 +9,24 @@ from . import classes as _cl
 
 
 def deckgen(
-        plasma, bunches, box, magic, qpic, verbose=True, filename='rpinput'
+        plasma, bunches, box, magic, qpic, filename=None, fid=None, verbose=True
         ):
     beampos = _cl.BeamPositioning()
     phas_samp = _cl.PhaseSpaceSampling()
     # =====================================
-    # =====================================
-    # Generate Input Deck
-    # =====================================
-    # =====================================
-    
-    # =====================================
-    # Path to folder holding templates
-    # =====================================
-    template_filename = 'rpinput'
-    
-    # =====================================
     # Generate jinja template object
     # =====================================
-    loader        = jj.PackageLoader('PyQPIC', 'resources/templates')
-    env           = jj.Environment(loader=loader, trim_blocks=True)
-    template      = env.get_template(template_filename)
+    loader            = jj.PackageLoader('PyQPIC', 'resources/templates')
+    env               = jj.Environment(loader=loader, trim_blocks=True)
+    template          = env.get_template('rpinput')
     
     # =====================================
     # Create output file for writing
     # =====================================
-    deckfile        = open(filename, 'w+')
+    if (fid is None and filename is None) or (fid is not None and filename is not None):
+        raise ValueError('Must use either fid or filename')
+    if filename is not None:
+        fid = open(filename, 'w+')
     
     # =====================================
     # Use jinja template object to create
@@ -54,9 +46,14 @@ def deckgen(
     # =====================================
     # Write stream contents to file
     # =====================================
-    stream.dump(deckfile)
+    stream.disable_buffering()
+    stream.dump(fid)
+
+    # myfid = open('mytemp', 'w+')
+    # stream.dump(myfid)
+    # myfid.close()
     
-    # =====================================
-    # Close file
-    # =====================================
-    deckfile.close()
+    if filename is not None:
+        fid.close()
+    else:
+        return fid

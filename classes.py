@@ -127,6 +127,9 @@ class MagicSettings(object):
         self.DT_fact     = DT_fact
     
 
+# ===============================
+# Simulation area settings
+# ===============================
 class BoxSettings(object):
     # ===============================
     # Box Dimensions
@@ -329,6 +332,9 @@ class BoxSettings(object):
         return NP2
 
 
+# ===============================
+# Plasma parameters
+# ===============================
 class PlasmaSettings(object):
     def __init__(self,
             bunches,
@@ -581,6 +587,9 @@ class PlasmaSettings(object):
         return self._z_prof
 
 
+# ===============================
+# QuickPIC settings (dumps, etc.)
+# ===============================
 class QuickPICSettings(object):
     def __init__(self,
             restart      = False,
@@ -1022,6 +1031,9 @@ class QuickPICSettings(object):
         return N_STAGES
 
 
+# ===============================
+# Bunch settings
+# ===============================
 class BunchSettings(object):
     def __init__(self, beamtype='drive', **kwargs
             ):
@@ -1043,9 +1055,9 @@ class BunchSettings(object):
                 'Q': int(2.0e10)                  ,  # e
 
                 # Bunch length
-                'sig_x_unmatched': 30.0e-6        ,  # um
-                'sig_y_unmatched': 30.0e-6        ,  # um
-                'sig_z': 30.0e-6                  ,  # um
+                'sig_x_unmatched': 30.0        ,  # um
+                'sig_y_unmatched': 30.0        ,  # um
+                'sig_z': 30.0                  ,  # um
 
                 # Bunch normalized emittance
                 'en_x_unmatched': 100.                      ,  # mm-mrad
@@ -1086,9 +1098,9 @@ class BunchSettings(object):
                 'Q': int(1.0e9)                   ,  # e
 
                 # Bunch length
-                'sig_x_unmatched': 10.0e-6                      ,  # um
-                'sig_y_unmatched': 10.0e-6                      ,  # um
-                'sig_z': 10.0e-6                      ,  # um
+                'sig_x_unmatched': 10.0                      ,  # um
+                'sig_y_unmatched': 10.0                      ,  # um
+                'sig_z': 10.0                      ,  # um
 
                 # Bunch normalized emittance
                 'en_x_unmatched': 1.                        ,  # mm-mrad
