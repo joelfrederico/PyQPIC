@@ -1,6 +1,6 @@
 import h5py as _h5
 import os as _os
-import mytools as _mt
+import scisalt as _mt
 
 
 class Beam(object):
