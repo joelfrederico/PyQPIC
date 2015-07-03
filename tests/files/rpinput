@@ -1,0 +1,361 @@
+---------------QuickPIC Input------------------------- 
+&Input_File 
+ Version = 032011  
+/ 
+ 
+--------------Pipeline Processing--------------------- 
+Number of stages in the pipeline 
+------------------------------------------------------ 
+&Pipeline 
+ Num_Stages = 2   
+/ 
+ 
+--------------Simulation System----------------------- 
+Simulation system (in unit of micron) = BOX_X * BOX_Y 
+ * BOX_Z 
+Total grids = (2^INDX) * (2^INDY) * (2^INDZ) 
+Total beam particles = NPX * NPY * NPZ 
+------------------------------------------------------ 
+&Simulation_Sys 
+ Box_X= 69845, Box_Y= 69845, Box_Z= 481, 
+ INDX = 9, INDY = 9, INDZ = 10  
+/ 
+ 
+--------------Boundary Condition---------------------- 
+Choose between 'periodic' and 'conducting'. 
+------------------------------------------------------ 
+&Boundary 
+ SBoundary = 'conducting'  
+/ 
+ 
+-------------- Beams --------------------------------- 
+NBeams = number of beams 
+------------------------------------------------------ 
+&Num_Beams  
+ NBeams = 2  
+/ 
+ 
+-------------Beam Parameters-------------------------- 
+BEAM_EVOLUTION : turn on/off beam push 
+MIN_BEAM_PARTICLE=minimal number of beam particles in  
+each processor. 
+NPX, NPY, NPZ : NPX*NPY*NPZ is the total number of  
+particles for this beam  
+Charge = charge of beam particle, in unit of e. 
+Mass = mass of beam particle, in unit of electron mass.  
+GAMMA = lorentz factor 
+Num_Particle = Number of beam particle. 
+VDX(Y&Z) = drift velocity of the beam, in unit of c 
+Init_Routine : specify which init routine to use. 
+             1 :  tri-gaussian random initializtion 
+             2 :  bi-gaussian in x and y, piecewise  
+                  linear in z 
+             3 :  bi-gaussian in x and y, piecewise  
+                  linear in z, random initialization 
+             4 :  arbitrary 3D profile specified by  
+                  the BEAM_PROFILE file, parameter  
+                  array is ignored.  
+             5 : twiss parameter initialization for  
+                 transverse phase space, gaussian for  
+                 longitudinal profile. 
+Parameter_Array = parameters for the init routine. 
+Parameter_Array(1,:) = (Center_X,Center_Y,Center_Z)  
+                 = Position of the center of the beam 
+Parameter_Array(2,:) = 
+  Init_Routine=1 :  (Sigma_X, Sigma_Y, Sigma_Z) 
+                        Sigma_X(Y) in micron  
+  Init_Routine=2,3 : (Sigma_X, Sigma_Y, Size_of_Profile_Array) 
+                     Maximum size = 500 
+  Init_Routine=5 : (Alpha_X, Beta_X, Alpha_Y, Beta_Y, Sigma_Z) 
+Parameter_Array(3,:) = 
+  Init_Routine=1,5 : (EMITTANCE_X, EMITTANCE_Y, ENERGY_DIFF)   
+                   Normalized emittance of the beam in unit of  
+                   mm*mrad, thermal velocity of the beam =  
+                   emittance/(gamma*sigma) 
+                   ENERGY_DIFF = DELTA_GAMMA/GAMMA, logitudinal  
+                   thermal velocity of the beam is ENERGY_DIFF/GAMMA 
+  Init_Routine=2,3: (EMITTANCE_X, EMITTANCE_Y, ENERGY_DIFF, 
+                   Centroid_C2X,Centroid_C1X,Centroid_C0X,Centroid_C2Y, 
+                   Centroid_C1Y,Centroid_C0Y) 
+                   Beam centroid is described by parabolic function 
+                   Centroid_C2*(Z-Z0)^2+Centroid_C1*(Z-Z0)+Centroid_C0 
+                   Here Z and Z0 are in unit of micron, the code wil  
+                   convert Centroid_C2(1&0) into the unit in the 
+                   slmulation. 
+Parameter_Array(4,:) =  
+   Init_Routine=1 : (Centroid_C2X,Centroid_C1X,Centroid_C0X) 
+   Init_Routine=2,3 : f(x(i)) in beam profile, arb. unit 
+   Init_Routine=5 : not used  
+Parameter_Array(5,:) = 
+   Init_Routine=1 : (Centroid_C2Y,Centroid_C1Y,Centroid_C0Y) 
+   Init_Routine=2,3 : x(i) in beam profile, in micron  
+   Init_Routine=5 : not used  
+Use_Shifter = Shift particles' transverse position after  
+   initialization 
+Shifter_Nsec = number of sections of the displacements 
+Shifter_Parameter(1,:) = displacement in x direction 
+Shifter_Parameter(2,:) = displacement in y direction 
+Shifter_Parameter(3,:) = z position of each section 
+Use_Destroyer = particle destroyer 
+Destroyer_NCriteria = number of criteria 
+Destroyer_Criteria(1,:) = dimension to operate on 
+   (1:X, 2:Y, 3:Z, 4:Px, 5:Py, 6:Pz) 
+Destroyer_Criteria(2,:) = lower bound 
+Destroyer_Criteria(3,:) = upper bound 
+   units are in micron(for XYZ) or mc(for Px,Py,Pz) 
+   inbound particles will be destroyed! 
+------------------------------------------------------ 
+&Beam 
+ BEAM_EVOLUTION = .true. 
+ MIN_BEAM_PARTICLE = 5000000  
+ NPX = 256, NPY = 256, NPZ = 128 
+ Charge = -1.0 
+ Mass = 1.0 
+ Gamma = 39823.87 
+ Num_Particle = 20000000000 
+ VDX = 0.0, VDY = 0.0, VDZ = 0.0 
+ Init_Routine =5 
+ BEAM_PROFILE = 'test.hdf'  
+ QUIET_START = .true.  
+ Parameter_Array(1:1,1:3) = 34922.5,34922.5,120.0 
+ Parameter_Array(2:2,1:5) = 66373.11666666667,995596.7502259952,6637.3116666666665,99559.67725995113,30.0 
+ Parameter_Array(3:3,1:3) = 100.0,10.0,0.0 
+ Parameter_Array(4:4,1:3) = 0.,0.,0. 
+ Parameter_Array(5:5,1:3) = 0.,0.,0. 
+ Use_Shifter = .false.                           
+ Shifter_Nsec = 1   
+ Shifter_Parameter(1:1,1:4) = 0.,0.,0.,0.  
+ Shifter_Parameter(2:2,1:4) = 0.,0.,0.,0. 
+ Shifter_Parameter(3:3,1:4) = 0.,0.,0.0,0.0  
+ Use_Destroyer = .true. 
+ Destroyer_NCriteria = 5  
+ Destroyer_Criteria(1:1,1:5)=1,1,2,2,6 
+ Destroyer_Criteria(2:2,1:5)=0,69843,0,69843,0 
+ Destroyer_Criteria(3:3,1:5)=2,69845,2,69845,100 
+ Use_Radiation_Damping = .false. 
+/ 
+ 
+&Beam 
+ BEAM_EVOLUTION = .true. 
+ MIN_BEAM_PARTICLE = 5000000  
+ NPX = 256, NPY = 256, NPZ = 128 
+ Charge = -1.0 
+ Mass = 1.0 
+ Gamma = 1000 
+ Num_Particle = 1000000000 
+ VDX = 0.0, VDY = 0.0, VDZ = 0.0 
+ Init_Routine =5 
+ BEAM_PROFILE = 'test.hdf'  
+ QUIET_START = .true.  
+ Parameter_Array(1:1,1:3) = 34922.5,34922.5,245.0 
+ Parameter_Array(2:2,1:5) = 150.0,2250.1,150.0,2250.1,10.0 
+ Parameter_Array(3:3,1:3) = 1.0,1.0,0.0 
+ Parameter_Array(4:4,1:3) = 0.,0.,0. 
+ Parameter_Array(5:5,1:3) = 0.,0.,0. 
+ Use_Shifter = .false.                           
+ Shifter_Nsec = 1   
+ Shifter_Parameter(1:1,1:4) = 0.,0.,0.,0.  
+ Shifter_Parameter(2:2,1:4) = 0.,0.,0.,0. 
+ Shifter_Parameter(3:3,1:4) = 0.,0.,0.0,0.0  
+ Use_Destroyer = .true. 
+ Destroyer_NCriteria = 5  
+ Destroyer_Criteria(1:1,1:5)=1,1,2,2,6 
+ Destroyer_Criteria(2:2,1:5)=0,69843,0,69843,0 
+ Destroyer_Criteria(3:3,1:5)=2,69845,2,69845,100 
+ Use_Radiation_Damping = .false. 
+/ 
+ 
+--------------laser_input ---------------------------- 
+&laser_input 
+ laser_on = .false. 
+/ 
+ 
+--------------plasma species------------------------ 
+Nspecies: total number of plasma species  
+Plasma_Density: density for normalization, 
+                in unit of cm-3 
+                not necessarily density of one species 
+---------------------------------------------------- 
+&Plasma 
+ Nspecies= 1 
+ Nneutrals= 0 
+ Plasma_Density= 3e+16 
+/ 
+ 
+------------Plasma Parameters------------------------- 
+LOAD_BALANCE_TH = threshold value for load balancing. 
+NP2: NP2*NP2 is the number of simulation particles in  
+    one 2D slice. 
+Charge = charge of plasma particle, in unit of e. 
+Mass = mass of plasma particle, in unit of electron mass. 
+VT2X(Y) = thermal velocity of the plasma electrons, in  
+    unit of c 
+Non_Neutral_Factor = - fixed ion density/electron density, 
+    Non_Neutral_Factor = 1 for neutral plasma 
+    Non_Neutral_Factor = 0 for pure electron cloud 
+    Effective only when conducting boundary condition 
+    is set. 
+Profile_type: 0 - uniform, density = 1  
+                  (nomalized to the Plasma_Density) 
+              1 - linear, density = 1+p1*(x/p2-p3) 
+              2 - sine, density = 1+p1*sin(x*p2-p3) 
+              3 - gaussian, density = 1+p1*exp(-((x-p2)/p3)**2)  
+              18 - hollow channel, density = 0 (r<p1) or p2 (r>p1) 
+              19 - circle, density = p2 (r<p1) or 0 (r>p1)  
+              20 - half space, density = 0 (right) or 1 (left) 
+              21 - piecewise, density = n(r) 
+argx1/2/3: arguments for uniform, linear, sine, gaussian, hollow,  
+           circle, half space profiles. 
+           uniform: argx1/2/3 not used. 
+           linear:  p1=argx1, p2=argx2, p3=argx3 
+           sine:  p1=argx1, p2=argx2, p3=argx3 
+           gaussian:  p1=argx1, p2=argx2, p3=argx3 
+           hollow/circle: p1=argx1 (micron), p2=argx2  
+           half: argx1/2/3 not used            
+Prof_Paras_Nsec = number of points in the piecewise function. Max=100 
+Prof_Parameters(1,1:100): n(r) for piecewise profile, n(r>box/2) is  
+     forced to be 0. 
+Prof_Parameters(2,1:100): r for piecewise profile, in micron 
+Density_Variation: Allow density variation in s, which is  
+    the propagation distance. 
+Density_Variation_Nsec: Number of sections of piece-wise  
+    linear function describing density variation, max=100. 
+Density_Variation_Fs: values of piece-wise linear function.  
+    These are the density ratios with respect to Plasma_Density.  
+Density_Variation_s: corresponding propagation distances (in  
+    micron). 
+------------------------------------------------------ 
+&Species 
+ LOAD_BALANCE_TH = -0.08 
+ NP2 = 1024.0  
+ Charge = -1.0 
+ Mass = 1.0 
+ VT2X=0.0, VT2Y=0.0 
+ Non_Neutral_Factor = 1.0  
+ Profile_type = 0 
+ argx1 = 1 
+ argx2 = 1 
+ argx3 = 1 
+ nsrand = 0  
+ Prof_Nsec = 9  
+ Prof_Parameter(1,1:9) = 0.1,0.1,1,1,0.05,0.05,1,1,0 
+ Prof_Parameter(2,1:9) = 0,20,20.1,40,40.1,60,60.1,90,95 
+ Density_Variation=.true. 
+ Density_Variation_Nsec=100 
+ Density_Variation_Fs(1:100) = 0.135335283237 0.141827555446 0.148548744775 0.155502058738 0.162690460213 0.170116649263 0.177783044856 0.185691766543 0.193844616153 0.202243059574 0.210888208678 0.219780803469 0.228921194503 0.238309325681 0.247944717466 0.257826450605 0.267953150441 0.278322971872 0.288933585063 0.299782161955 0.310865363682 0.322179328941 0.33371966342 0.345481430332 0.357459142149 0.369646753593 0.382037655963 0.394624672847 0.407400057303 0.420355490548 0.433482082222 0.44677037227 0.460210334487 0.473791381775 0.487502373135 0.501331622424 0.515266908915 0.52929548965 0.543404113621 0.557579037764 0.571806044768 0.586070462695 0.600357186373 0.614650700553 0.628935104786 0.643194139986 0.65741121662 0.671569444475 0.685651663933 0.699640478685 0.713518289809 0.727267331111 0.740869705657 0.754307423374 0.767562439638 0.780616694712 0.793452153945 0.806050848581 0.818394917078 0.830466646787 0.842248515869 0.853723235305 0.864873790863 0.875683484885 0.886135977739 0.89621532881 0.905906036869 0.915193079689 0.924061952765 0.932498706997 0.940489985195 0.948023057283 0.955085854059 0.961666999404 0.967755840792 0.973342478023 0.978417790033 0.982973459708 0.987001996592 0.990496757411 0.993451964323 0.99586272084 0.997725025344 0.999035782156 0.999792810111 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 
+ Density_Variation_s(1:100) = 0.0 3535.07611631 7070.15223263 10605.2283489 14140.3044653 17675.3805816 21210.4566979 24745.5328142 28280.6089305 31815.6850468 35350.7611631 38885.8372795 42420.9133958 45955.9895121 49491.0656284 53026.1417447 56561.217861 60096.2939774 63631.3700937 67166.44621 70701.5223263 74236.5984426 77771.6745589 81306.7506752 84841.8267916 88376.9029079 91911.9790242 95447.0551405 98982.1312568 102517.207373 106052.283489 109587.359606 113122.435722 116657.511838 120192.587955 123727.664071 127262.740187 130797.816304 134332.89242 137867.968536 141403.044653 144938.120769 148473.196885 152008.273002 155543.349118 159078.425234 162613.50135 166148.577467 169683.653583 173218.729699 176753.805816 180288.881932 183823.958048 187359.034165 190894.110281 194429.186397 197964.262514 201499.33863 205034.414746 208569.490863 212104.566979 215639.643095 219174.719212 222709.795328 226244.871444 229779.94756 233315.023677 236850.099793 240385.175909 243920.252026 247455.328142 250990.404258 254525.480375 258060.556491 261595.632607 265130.708724 268665.78484 272200.860956 275735.937073 279271.013189 282806.089305 286341.165421 289876.241538 293411.317654 296946.39377 300481.469887 304016.546003 307551.622119 311086.698236 314621.774352 318156.850468 321691.926585 325227.002701 328762.078817 332297.154934 335832.23105 339367.307166 342902.383283 346437.459399 349972.535515 
+/ 
+&Neutral 
+ Neutral_gas = 1 
+ Neutral_z = 1 
+/ 
+ 
+------------Simulation time--------------------------- 
+TEND = Total time, DT = TimeStep  
+In unit of 1/Omega_p. 
+------------------------------------------------------ 
+&Simulation_time 
+ TEND = 11396.0, DT = 19.0 
+/  
+ 
+------------ Diagnostic ------------------------------ 
+DFPSI, DFPHI, DFQEB, DFQEP, DFVP, DFCHI, DFJP, DFJB,  
+DFE, DFB  are the intervals in unit  
+of timestep to output PSI, PHI, beam and plasma  
+density, ponderomotive potential, CHI, plasma current, 
+beam current, E field and B field respectively. 
+DF*SLICE specify the interval for outputing 2D slices 
+of the data. 
+PHI(PSI,QEB,QEP)X0, if not zero, specify which Y-Z  
+slice to dump.  
+PHI(PSI,QEB,QEP)Y0, if not zero, specify which X-Z  
+slice to dump. 
+PHI(PSI,QEB,QEP)Z0, if not zero, specify which X-Y  
+slice to dump. 
+BC_DIAG_RES specify the number of slices along Z  
+direction for beam centroid calculation. 
+------------------------------------------------------ 
+&Potential_Diag 
+ DFPHI=0, 
+ DFPHISLICE=0, PHIX0=0 ,PHIY0=0, PHIZ0=0, 
+ DFPSI=0,  
+ DFPSISLICE=0, PSIX0=0,PSIY0=0, PSIZ0=0 
+/ 
+ 
+&Ponderomotive_Potential_Diag 
+ DFVP=0, 
+ DFVPSLICE=0, VPX0=0, VPY0=0, VPZ0=0 
+/ 
+ 
+&Chi_Diag 
+ DFCHI=0, 
+ DFCHISLICE=0, CHIX0=0, CHIY0=0, CHIZ0=0 
+/ 
+ 
+&Current_Diag 
+ DFJP=0,  
+ DFJPSLICE=0, JPX0=0, JPY0=0, JPZ0=0 
+ DFJB=0,  
+ DFJBSLICE=0, JBX0=0, JBY0=0, JBZ0=0 
+/ 
+ 
+&Field_Diag 
+ DFE=0,  
+ DFESLICE= 20, EX0= 34922.5, EY0= 34922.5, EZ0= 0.0 
+ DFB=0,  
+ DFBSLICE= 20, BX0= 34922.5, BY0= 34922.5, BZ0= 0.0 
+/ 
+ 
+&Beam_Diag 
+ DFQEB=0,  
+ DFQEBSLICE= 20 , QEBX0= 34922.5, QEBY0= 34922.5,  QEBZ0= 0.0, 
+ DFBC=0, BC_DIAG_RES= 64 
+/ 
+ 
+&Plasma_Diag 
+ DFQEP=0,  
+ DFQEPSLICE= 20 , QEPX0= 34922.5, QEPY0= 34922.5,  QEPZ0= 0.0 
+/ 
+ 
+------------ Diagnostic ------------------------------ 
+ DUMP_PHA: switch to turn on phase space diagnostics 
+ DFPHA:  intevals in unit of timestep for dumping phase 
+ space 
+ DSAMPLE :  spacing of sampling 
+------------------------------------------------------ 
+&Beam_Phase_Space_Diag 
+ DUMP_PHA_BEAM=.true., DFPHA_BEAM= 20,  
+ DSAMPLE_BEAM = 2048 
+/ 
+ 
+&Plasma_Phase_Space_Diag 
+ DUMP_PHA_PLASMA = .false., DFPHA_PLASMA = 1, 
+ DSAMPLE_PLASMA = 2048 
+/ 
+ 
+------------ Restart file ---------------------------- 
+READ_RST_FILE specify a restart run and  RST_TIMESTEP  
+which timestep to begin the restart run 
+DUMP_RST_FILE control restart file dumping and DFRST 
+is the dumping frequency 
+------------------------------------------------------ 
+&Restart_File 
+ READ_RST_FILE = .false., RST_TIMESTEP = 1200  
+ DUMP_RST_FILE = .true.,  DFRST= 100 
+/ 
+ 
+------------Optimization Coefficents---------------- 
+INTERNAL DATA. DO NOT CHANGE! 
+------------------------------------------------------ 
+&Optimization 
+ INORDER = 1, POPT = 1, DOPT = 2, DJOPT = 1  
+ SORTIME_2D = 25, SORTIME_3D = 25 
+/ 
+ 
+------------Debug------------------------------------- 
+Debug options 
+------------------------------------------------------ 
+&debug 
+ MAX_ITER = 2, FAC_EXY = 1., FAC_BXY = 1., FAC_AZ = 1,  
+ FAC_BZ = 1, C_DIF = 1 , J_DIF = 1, VERBOSE = 0  
+/ 
