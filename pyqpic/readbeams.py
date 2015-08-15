@@ -1,9 +1,17 @@
 import h5py as _h5
 import os as _os
 import scisalt as _mt
+import pdb
 
 
 class Beam(object):
+    """
+    Loads particles from beam files.
+
+    * *nbeam*: Number of beams
+    * *tstep*: Time step
+    * *path*: Path to beam files
+    """
     def __init__(self, nbeam=1, tstep=0, path=None):
         if path is None:
             path = _os.getcwd()
@@ -13,6 +21,8 @@ class Beam(object):
 
         rel_filepath = 'RAW-BEAM/{nbeam:02.0f}/RAW-BEAM-{nbeam:02.0f}_{tstep:04.0f}.h5'.format(nbeam=nbeam, tstep=tstep)
         self._filepath = _os.path.join(path, rel_filepath)
+
+        pdb.set_trace()
 
         self._h5file = _h5.File(self.filepath, 'r')
         self._h5 = _mt.H5Drill(self._h5file)

@@ -3,15 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PyQPIC's documentation!
-==================================
+Welcome to PyQPIC v\ |release|
+==============================
 
 Contents:
 
 .. toctree::
+   :numbered:
    :maxdepth: 2
 
-
+   fulldoc/fulldoc
+   changelog
 
 Indices and tables
 ==================
