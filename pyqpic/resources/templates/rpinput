@@ -124,14 +124,14 @@ Destroyer_Criteria(3,:) = upper bound
 {% for bunch in bunches %}
 &Beam 
  BEAM_EVOLUTION = .{{ qpic.BEAM_EVO }}. 
- MIN_BEAM_PARTICLE = 5000000  
+ MIN_BEAM_PARTICLE = 10000000  
  NPX = {{ NP_xy }}, NPY = {{ NP_xy }}, NPZ = {{ NP_z }} 
- Charge = -1.0 
+ Charge = 1.0 
  Mass = 1.0 
  Gamma = {{ bunch.gamma }} 
  Num_Particle = {{ bunch.Q }} 
  VDX = {{ bunch.v_x }}, VDY = {{ bunch.v_y }}, VDZ = {{ bunch.v_z }} 
- Init_Routine =5 
+ Init_Routine = 5 
  BEAM_PROFILE = 'test.hdf'  
  QUIET_START = .true.  
 {% set C_x = beampos.C_x(box=box, plasma=plasma, bunches=bunches, bunch=bunch, magic=magic) %}

@@ -21,29 +21,29 @@ class BeamPositioning(object):
     # beam toward front of box in z
     def _C_x_y(self, box, plasma, bunches, off, magic):
         box_xy = box.box_xy(
-            plasma = plasma,
+            plasma  = plasma,
             bunches = bunches,
-            magic = magic
+            magic   = magic
             )
         C = 0.5 * box_xy + off  # um
         return C
 
     def C_x(self, box, plasma, bunches, bunch, magic):
         return self._C_x_y(
-            box=box,
-            plasma=plasma,
-            bunches=bunches,
-            magic=magic,
-            off=bunch.off_x
+            box     = box,
+            plasma  = plasma,
+            bunches = bunches,
+            magic   = magic,
+            off     = bunch.off_x
             )
 
     def C_y(self, box, plasma, bunches, bunch, magic):
         return self._C_x_y(
-            box=box,
-            plasma=plasma,
-            bunches=bunches,
-            magic=magic,
-            off=bunch.off_y
+            box     = box,
+            plasma  = plasma,
+            bunches = bunches,
+            magic   = magic,
+            off     = bunch.off_y
             )
 
     def C_z(self, bunches, bunch):
@@ -128,7 +128,7 @@ class MagicSettings(object):
     
 
 # ===============================
-# Simulation area settings
+# Simulation box settings
 # ===============================
 class BoxSettings(object):
     # ===============================
@@ -176,8 +176,8 @@ class BoxSettings(object):
                     7.0 * max_sig)
                     / 5.) * 5)                         # um
         # ensure box_xy is odd:
-        if not(box_xy % 2):
-            box_xy += 1
+        # if not(box_xy % 2):
+        #     box_xy += 1
 
         return box_xy
 
@@ -318,7 +318,7 @@ class BoxSettings(object):
         else:
             # beam particle density (power of 2)
             # default "safe" values->
-            NP_z     = int(pow(2, 7))
+            NP_z     = int(pow(2, 8))
 
         return NP_z
 
@@ -1040,19 +1040,20 @@ class BunchSettings(object):
         if beamtype == 'drive':
             params = {
                 # Relativistic gamma
-                'gamma': 39823.87,
+                'gamma': 39824,
 
                 # Auto-match spot size to plasma?
                 'sig_x_matched': False            ,  # boolean
                 'sig_y_matched': False            ,  # boolean
-                'sig_x_matched': False            ,  # boolean
+                'sig_z_matched': False            ,  # boolean
 
                 # Auto-match emittance to plasma?
                 'en_x_matched': False             ,  # boolean
                 'en_y_matched': False             ,  # boolean
 
                 # Bunch charge
-                'Q': int(2.0e10)                  ,  # e
+                # 'Q': int(2.0e10)                  ,  # e
+                'Q': int(5e9)                  ,  # e
 
                 # Bunch length
                 'sig_x_unmatched': 30.0        ,  # um
@@ -1088,7 +1089,7 @@ class BunchSettings(object):
                 # Auto-match spot size to plasma?
                 'sig_x_matched': False            ,  # boolean
                 'sig_y_matched': False            ,  # boolean
-                'sig_x_matched': False            ,  # boolean
+                'sig_z_matched': False            ,  # boolean
 
                 # Auto-match emittance to plasma?
                 'en_x_matched': False             ,  # boolean
