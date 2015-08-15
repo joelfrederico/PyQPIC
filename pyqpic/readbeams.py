@@ -1,7 +1,10 @@
-import h5py as _h5
 import os as _os
+_on_rtd = _os.environ.get('READTHEDOCS', None) == 'True'
+if not _on_rtd:
+    import h5py as _h5
+    import pdb
+
 import scisalt as _mt
-import pdb
 
 
 class Beam(object):
