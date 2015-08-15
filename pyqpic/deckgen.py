@@ -19,14 +19,16 @@ def deckgen(
     # =====================================
     # Generate jinja template object
     # =====================================
-    loader            = _jj.PackageLoader('PyQPIC', 'resources/templates')
+    loader            = _jj.PackageLoader('pyqpic', 'resources/templates')
     env               = _jj.Environment(loader=loader, trim_blocks=True)
     template          = env.get_template('rpinput')
     
     # =====================================
     # Create output file for writing
     # =====================================
-    if (fid is None and filename is None) or (fid is not None and filename is not None):
+    if (fid is None and filename is None):
+        filename = 'rpinput'
+    if (fid is not None and filename is not None):
         raise ValueError('Must use either fid or filename')
     if filename is not None:
         fid = open(filename, 'w+')
