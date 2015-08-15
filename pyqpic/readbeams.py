@@ -2,7 +2,7 @@ import os as _os
 _on_rtd = _os.environ.get('READTHEDOCS', None) == 'True'
 if not _on_rtd:
     import h5py as _h5
-    import pdb
+    import pdb as _pdb
 
 import scisalt as _mt
 
@@ -25,7 +25,7 @@ class Beam(object):
         rel_filepath = 'RAW-BEAM/{nbeam:02.0f}/RAW-BEAM-{nbeam:02.0f}_{tstep:04.0f}.h5'.format(nbeam=nbeam, tstep=tstep)
         self._filepath = _os.path.join(path, rel_filepath)
 
-        pdb.set_trace()
+        _pdb.set_trace()
 
         self._h5file = _h5.File(self.filepath, 'r')
         self._h5 = _mt.H5Drill(self._h5file)

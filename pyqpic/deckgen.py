@@ -4,20 +4,23 @@
 # QuickPIC Deck Generator
 # ========================
 import numpy as _np
-import jinja2 as jj
+import jinja2 as _jj
 from . import classes as _cl
 
 
 def deckgen(
         plasma, bunches, box, magic, qpic, filename=None, fid=None, verbose=True
         ):
+    """
+    Generates a QuickPIC rpinput deck.
+    """
     beampos = _cl.BeamPositioning()
     phas_samp = _cl.PhaseSpaceSampling()
     # =====================================
     # Generate jinja template object
     # =====================================
-    loader            = jj.PackageLoader('PyQPIC', 'resources/templates')
-    env               = jj.Environment(loader=loader, trim_blocks=True)
+    loader            = _jj.PackageLoader('PyQPIC', 'resources/templates')
+    env               = _jj.Environment(loader=loader, trim_blocks=True)
     template          = env.get_template('rpinput')
     
     # =====================================

@@ -1,6 +1,10 @@
-import numpy as _np
 # import ipdb
-from . import const as ct
+from . import const as _ct
+import os as _os
+_on_rtd = _os.environ.get('READTHEDOCS', None) == 'True'
+if not _on_rtd:
+    import numpy as _np
+    import scipy.constants as _spc
 
 
 def _set_if_none(self, mainkwargs, params):
@@ -17,6 +21,9 @@ def _set_if_none(self, mainkwargs, params):
 # Beam Positioning
 # ===============================
 class BeamPositioning(object):
+    """
+    Works with the positioning of the beam within the simulation box.
+    """
     # beam centered in x & y
     # beam toward front of box in z
     def _C_x_y(self, box, plasma, bunches, off, magic):
@@ -56,6 +63,9 @@ class BeamPositioning(object):
 # Sizes & Resolution
 # ===============================
 class PhaseSpaceSampling(object):
+    """
+    Controls the phase space sampling.
+    """
     def __init__(self,
             # Beam Phase Space
             samp_beam_pha_N = int(pow(2, 17)),   # particles
@@ -111,6 +121,9 @@ class PhaseSpaceSampling(object):
 # "Magic" Simulation Factors
 # ===============================
 class MagicSettings(object):
+    """
+    Controls the magic settings.
+    """
     def __init__(self,
             box_xy_fact = 1.0            ,  # should be ~1-2
             box_z_fact  = 1.0            ,  # should be ~1-2
@@ -131,6 +144,9 @@ class MagicSettings(object):
 # Simulation box settings
 # ===============================
 class BoxSettings(object):
+    """
+    Controls the size/settings of the box.
+    """
     # ===============================
     # Box Dimensions
     # ===============================
@@ -204,7 +220,7 @@ class BoxSettings(object):
 
     def d_grid(self, magic, plasma):
         # grid spacing
-        d_grid   = magic.d_grid_fact * plasma.cwp * ct.cm2um             # um
+        d_grid   = magic.d_grid_fact * plasma.cwp * _ct.cm2um             # um
         return d_grid
 
     def ind_xy(self, plasma, bunches, magic):
@@ -336,6 +352,9 @@ class BoxSettings(object):
 # Plasma parameters
 # ===============================
 class PlasmaSettings(object):
+    """
+    Controls the plasma options.
+    """
     def __init__(self,
             bunches,
             magic,
@@ -416,7 +435,7 @@ class PlasmaSettings(object):
     @property
     def cwp(self):
         # characteristic length
-        cwp    = ct.c / self.wp  # cm
+        cwp    = _spc.c / self.wp  # cm
         return cwp
 
     @property
@@ -427,13 +446,13 @@ class PlasmaSettings(object):
 
     def R_bub(self, drive_bunch):
         # max bubble radius
-        R_bub    = 2.58 * _np.sqrt((drive_bunch.Lambda / (ct.qe * ct.c)) * (1 / self.np)) * ct.cm2um  # um
+        R_bub    = 2.58 * _np.sqrt((drive_bunch.Lambda / (_spc.elementary_charge * _spc.c)) * (1 / self.np)) * _ct.cm2um  # um
         return R_bub
 
     @property
     def L_bub(self):
         # bubble length
-        L_bub    = 2 * ct.pi * self.cwp * ct.cm2um      # um
+        L_bub    = 2 * _spc.pi * self.cwp * _ct.cm2um      # um
         return L_bub
 
     @property
@@ -560,7 +579,7 @@ class PlasmaSettings(object):
             TEND = qpic.TEND(bunches[0], self, magic)
             DT = qpic.DT(bunches[0], magic)
             self._dense_var = "true"
-            self._z_max   = TEND * self.cwp * ct.cm2um  # um
+            self._z_max   = TEND * self.cwp * _ct.cm2um  # um
             self._z_nstep = int(min(100, _np.floor(TEND / DT)))
             self._z_step  = _np.linspace(0, self._z_max, self._z_nstep)  # um
             self._z_prof  = gaussramps(1, self.flat_start, self.upramp_sig,
@@ -591,6 +610,9 @@ class PlasmaSettings(object):
 # QuickPIC settings (dumps, etc.)
 # ===============================
 class QuickPICSettings(object):
+    """
+    Controls the overarching QuickPIC settings.
+    """
     def __init__(self,
             restart      = False,
             dump_restart = True,
@@ -1035,6 +1057,9 @@ class QuickPICSettings(object):
 # Bunch settings
 # ===============================
 class BunchSettings(object):
+    """
+    Controls the bunch parameters.
+    """
     def __init__(self, beamtype='drive', **kwargs
             ):
         if beamtype == 'drive':
@@ -1132,7 +1157,7 @@ class BunchSettings(object):
         # Calculated Peak Current
         # ========================
         # peak current of drive bunch
-        Lambda = self.Q * ct.qe * ct.c / (_np.sqrt(2 * ct.pi) * self.sig_z * ct.um2cm)  # A
+        Lambda = self.Q * _spc.elementary_charge * _spc.c / (_np.sqrt(2 * _spc.pi) * self.sig_z * _ct.um2cm)  # A
         return Lambda
 
     # ===============================
@@ -1140,7 +1165,7 @@ class BunchSettings(object):
     # ===============================
     def _sig(self, sig_matched, en, plasma, sig_unmatched):
         if sig_matched:
-            sig = _np.sqrt(en * (ct.cm2um / plasma.kp) * _np.sqrt(2 / self.gamma))
+            sig = _np.sqrt(en * (_ct.cm2um / plasma.kp) * _np.sqrt(2 / self.gamma))
         else:
             sig = sig_unmatched
         return sig
@@ -1163,7 +1188,7 @@ class BunchSettings(object):
 
     def _en(self, en_matched, en_unmatched, sig, plasma):
         if en_matched:
-            en = pow(sig, 2.0) * (plasma.kp / ct.cm2um) * _np.sqrt(self.gamma / 2.0)
+            en = pow(sig, 2.0) * (plasma.kp / _ct.cm2um) * _np.sqrt(self.gamma / 2.0)
         else:
             en = en_unmatched
         return en
